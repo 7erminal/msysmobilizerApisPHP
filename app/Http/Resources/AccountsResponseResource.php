@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 use App\Http\Resources\AccountResource;
 
@@ -23,9 +24,9 @@ class AccountsResponseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'statusCode' => $this->statusCode,
-            'statusDesc' => $this->statusDesc,
-            'result' => $this->resource ? $this->resource->map(function ($item) {
+            'StatusCode' => $this->statusCode,
+            'StatusDesc' => $this->statusDesc,
+            'Result' => $this->resource ? collect($this->resource)->map(function ($item) {
                 return new AccountResource($item);
             }) : null,
         ];

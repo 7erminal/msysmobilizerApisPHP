@@ -8,6 +8,20 @@ use DB;
 use App\Http\Resources\ValidationResponseResource;
 use PDO;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="Vendor - Service",
+ *      description="App Service documentation",
+ *      @OA\Contact(
+ *          email="admin@admin.com"
+ *      ),
+ *      @OA\License(
+ *          name="Apache 2.0",
+ *          url="https://www.apache.org/licenses/LICENSE-2.0.html"
+ *      )
+ * )
+ */
 class NumberValidationApiController extends Controller
 {
     /**
@@ -53,6 +67,18 @@ class NumberValidationApiController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Get(
+     *     path="/api/number-category-validation/{number}",
+     *     @OA\Response(response="200", description="An example endpoint"),
+     *      @OA\Parameter(
+     *         name="number",
+     *         in="path",
+     *         description="Number",
+     *         required=true,
+     *      ),
+     * )
+     */
     public function checkNumberCategory(string $number)
     {
         //
@@ -65,20 +91,27 @@ class NumberValidationApiController extends Controller
 
         Log::debug("Response from procedure");
         Log::debug($resp);
-        Log::debug(var_dump($resp[0]));
+        // Log::debug(var_dump($resp[0]));
         Log::debug($resp[0]->FieldStatus);
 
         $message = "Error validating number";
         $respSummary = "";
         $respCode = 500;
 
-        if($resp[0]->FieldStatus == 1){
-            $message = "Number validated. Number is a mobilization number.";
-            $respSummary = "MOBILIZATION";
-            $respCode = 200;
-        } else if ($resp[0]->FieldStatus == 0){
-            $message = "Number validated. Number is a customer number.";
-            $respSummary = "CUSTOMER";
+        try{
+            if($resp[0]->FieldStatus == 1){
+                $message = "Number validated. Number is a mobilization number.";
+                $respSummary = "MOBILIZATION";
+                $respCode = 200;
+            } else if ($resp[0]->FieldStatus == 0){
+                $message = "Number validated. Number is a customer number.";
+                $respSummary = "CUSTOMER";
+            }
+        } catch(Exception $e){
+            Log::error("Error::: ". $e);
+
+            $message = "Error validating number.";
+            $respSummary = "ERROR";
         }
 
         return new ValidationResponseResource($respSummary, $respCode, $message);
@@ -87,6 +120,18 @@ class NumberValidationApiController extends Controller
 
     /**
      * Display the specified resource.
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/existing-number/{number}",
+     *     @OA\Response(response="200", description="An example endpoint"),
+     *     @OA\Parameter(
+     *         name="number",
+     *         in="path",
+     *         description="Number",
+     *         required=true,
+     *      ),
+     * )
      */
     public function checkNumberExist(string $number)
     {
@@ -134,7 +179,7 @@ class NumberValidationApiController extends Controller
 
         Log::debug("Response from procedure");
         Log::debug($resp);
-        Log::debug(var_dump($resp[0]));
+        // Log::debug(var_dump($resp[0]));
         Log::debug($resp[0]->Status);
 
         $message = "Error validating number";

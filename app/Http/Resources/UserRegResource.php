@@ -15,10 +15,10 @@ class UserRegResource extends JsonResource
     public function toArray(Request $request): array
     {
         return $this->resource ? [
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-            'gender' => $this->gender,
-            'mobileNumber' => $this->mobileNumber
+            'FirstName' => $this->firstName,
+            'LastName' => $this->lastName,
+            'Gender' => $this->gender,
+            'MobileNumber' => $this->mobileNumber
         ] : null;
     }
 }

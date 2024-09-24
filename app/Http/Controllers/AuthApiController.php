@@ -53,6 +53,33 @@ class AuthApiController extends Controller
     /**
      * Display the specified resource.
      */
+    /**
+     * @OA\Post(
+     *     path="/api/verify-pin",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to verify pin",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/PinValidationRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
     public function validatePin(Request $request)
     {
         //
@@ -69,7 +96,7 @@ class AuthApiController extends Controller
 
         Log::debug("Response from procedure");
         Log::debug($resp);
-        Log::debug(var_dump($resp[0]));
+        // Log::debug(var_dump($resp[0]));
         Log::debug($resp[0]->Status);
 
         $message = "Error verifying credentials";
@@ -99,6 +126,33 @@ class AuthApiController extends Controller
 
     /**
      * Save field deposit.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/register-account",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to register user",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
      */
     public function registerAccount(Request $request)
     {
@@ -130,6 +184,7 @@ class AuthApiController extends Controller
         $message = "Failed to register.";
         $respSummary = "FAILED";
         $respCode = 301;
+        $resp = null;
 
         if($proceed==false){
             $message = "Unknown gender.";
@@ -138,38 +193,53 @@ class AuthApiController extends Controller
         } else {
             Log::debug("Calling procedure");
 
-            if($type=='CUSTOMER'){
-                $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber));
-
-                Log::debug($resp);
-                Log::debug(json_decode(json_encode($resp[0]), true));
-                $message = "Customer added successfully";
-                $respSummary = "SUCCESS";
-                $respCode = 200;
-                $resp = $resp[0]->AccountNumber;
-
-            } else if ($type=='FIELD') {
-                $resp = DB::select('exec kafNewAccountField ?, ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber, $altMobileNumber));
-                
-                Log::debug($resp);
-                Log::debug(json_decode(json_encode($resp[0]), true));
-                $message = "Field Officer added successfully";
-                $respSummary = "SUCCESS";
-                $respCode = 200;
-                $resp = $resp[0]->AccountID;
-            } else {
-                $message = "Unknown customer type.";
+            try{
+                if($type=='CUSTOMER'){
+                    $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber));
+    
+                    Log::debug($resp);
+                    Log::debug(json_decode(json_encode($resp[0]), true));
+                    $message = "Customer added successfully";
+                    $respSummary = $resp[0]->AccountNumber;
+                    Log::debug("Customer added successfully");
+                    Log::debug($respSummary);
+                    $respCode = 200;
+                    $resp = $resp[0];
+    
+                } else if ($type=='FIELD') {
+                    $resp = DB::select('exec kafNewAccountField ?, ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber, $altMobileNumber));
+                    
+                    Log::debug($resp);
+                    Log::debug(json_decode(json_encode($resp[0]), true));
+                    $message = "Field Officer added successfully";
+                    $respSummary = $resp[0]->AccountID;
+                    Log::debug("Field Officer added successfully");
+                    Log::debug($respSummary);
+                    $respCode = 200;
+                    $resp = $resp[0];
+                } else {
+                    $message = "Unknown customer type.";
+                    $respSummary = "FAILED";
+                    $respCode = 406;
+                    $resp = null;
+                }
+            } catch(Exception $e){
+                $message = "An error occurred while registering. Please try again.";
                 $respSummary = "FAILED";
-                $respCode = 406;
+                $respCode = 412;
+                $resp = null;
             }
+            
 
-            if($resp=='Already Exist'){
+            if($respSummary=='Already Exist'){
                 $message = "User already exists.";
                 $respSummary = "FAILED";
+                $resp = null;
                 $respCode = 402;
-            } else if($resp==0){
+            } else if($respSummary==0){
                 $message = "Account not registered. Please try again later.";
                 $respSummary = "FAILED";
+                $resp = null;
                 $respCode = 405;
             }
 
@@ -182,6 +252,6 @@ class AuthApiController extends Controller
             // Log::debug($resp[0]->Status);
         }
 
-        return new UserResponseResource($respSummary, $respCode, $message);
+        return new UserResponseResource($resp, $respCode, $message, $type);
     }
 }

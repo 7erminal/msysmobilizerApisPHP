@@ -3,18 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
+
 
 Route::get('/number-category-validation/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberCategory']);
 Route::get('/existing-number/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberExist']);
 Route::post('/verify-pin', [App\Http\Controllers\AuthApiController::class, 'validatePin']);
 Route::post('/list-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3']);
+Route::post('/list-cust-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3Cust']);
 Route::post('/credit-account', [App\Http\Controllers\AccountsApiController::class, 'creditAccount']);
 Route::post('/account-balance', [App\Http\Controllers\AccountsApiController::class, 'checkAccountBalance']);
 Route::post('/field-deposit', [App\Http\Controllers\AccountsApiController::class, 'saveFieldDeposit']);
-
 Route::post('/register-account', [App\Http\Controllers\AuthApiController::class, 'registerAccount']);
 
 // curl -ivk http://127.0.0.1:8001/api/verify-pin
@@ -25,7 +26,7 @@ Route::post('/register-account', [App\Http\Controllers\AuthApiController::class,
 //     "userName": "ESB_USER"
 // }'
 
-// curl -ivk "http://127.0.0.1:8001/api/verify-pin" -H  "Content-Type: application/json"  -d '{
+// curl -ivk "http://127.0.0.1:8000/api/verify-pin" -H  "Content-Type: application/json"  -d '{
 //     "number": 0546437976,
 //     "password": 1234,
 //    }'

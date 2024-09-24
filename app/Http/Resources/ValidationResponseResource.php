@@ -21,9 +21,9 @@ class ValidationResponseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'statusCode' => $this->statusCode,
-            'statusDesc' => $this->statusDesc,
-            'result' => $this->result
+            'StatusCode' => $this->statusCode,
+            'StatusDesc' => $this->statusDesc,
+            'Result' => $this->result
         ];
     }
 }

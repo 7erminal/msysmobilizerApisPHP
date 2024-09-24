@@ -1,0 +1,459 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Vendor - Service",
+        "description": "App Service documentation",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/list-accounts": {
+            "post": {
+                "operationId": "8dc2d48b97d940df7885af7f9e968f5f",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/IdRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/list-cust-accounts": {
+            "post": {
+                "operationId": "53be69a37d8c1a834ed30b1af84faf6e",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NumberRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/credit-account": {
+            "post": {
+                "operationId": "ce26bccbde869c3b2a7cc49e2b99d704",
+                "requestBody": {
+                    "description": "request parameters to credit account",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreditAccountRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/account-balance": {
+            "post": {
+                "operationId": "5bfe57c2004b1f0fb9ffe1a96919ac02",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AccountRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/field-deposit": {
+            "post": {
+                "operationId": "578383de6b0af64d79fb0f73c5d04ec1",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SaveFieldRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/verify-pin": {
+            "post": {
+                "operationId": "b0d1e3a9168b382828ff70311b015720",
+                "requestBody": {
+                    "description": "request parameters to verify pin",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PinValidationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/register-account": {
+            "post": {
+                "operationId": "a0965bc91eb2a0f86b8f67b45a789dbb",
+                "requestBody": {
+                    "description": "request parameters to register user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/number-category-validation/{number}": {
+            "get": {
+                "operationId": "0143634736aac612b342e3a415805f27",
+                "parameters": [
+                    {
+                        "name": "number",
+                        "in": "path",
+                        "description": "Number",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An example endpoint"
+                    }
+                }
+            }
+        },
+        "/api/existing-number/{number}": {
+            "get": {
+                "operationId": "c81f6ae466416e47e44d4debd66dd8e2",
+                "parameters": [
+                    {
+                        "name": "number",
+                        "in": "path",
+                        "description": "Number",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An example endpoint"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AccountRequest": {
+                "title": "Account number Request",
+                "description": "Request that requires an account number",
+                "required": [
+                    "accountNumber"
+                ],
+                "properties": {
+                    "accountNumber": {
+                        "title": "accountNumber",
+                        "description": "Account number",
+                        "type": "string",
+                        "example": "1000010001"
+                    }
+                },
+                "type": "object"
+            },
+            "CreditAccountRequest": {
+                "title": "Credit account Request",
+                "description": "Credit account",
+                "required": [
+                    "accountNumber",
+                    "amount"
+                ],
+                "properties": {
+                    "accountNumber": {
+                        "title": "accountNumber",
+                        "description": "Account number",
+                        "type": "string",
+                        "example": "10000001001"
+                    },
+                    "amount": {
+                        "title": "amount",
+                        "description": "Amount",
+                        "type": "string",
+                        "example": "20"
+                    }
+                },
+                "type": "object"
+            },
+            "IdRequest": {
+                "title": "Id Request",
+                "description": "Request that requires just an ID",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "ID",
+                        "type": "string",
+                        "example": "5"
+                    }
+                },
+                "type": "object"
+            },
+            "NumberRequest": {
+                "title": "Number Request",
+                "description": "Request that requires just a number",
+                "required": [
+                    "number"
+                ],
+                "properties": {
+                    "number": {
+                        "title": "number",
+                        "description": "Number",
+                        "type": "string",
+                        "example": "0557001000"
+                    }
+                },
+                "type": "object"
+            },
+            "PinValidationRequest": {
+                "title": "Pin Validation Request",
+                "description": "Pin Validation request",
+                "required": [
+                    "number",
+                    "password"
+                ],
+                "properties": {
+                    "number": {
+                        "title": "number",
+                        "description": "User Number",
+                        "type": "string",
+                        "example": "0557881327"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "User Password or Pin",
+                        "type": "string",
+                        "example": "0000"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Register Request",
+                "description": "Register request",
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "gender",
+                    "mobileNumber"
+                ],
+                "properties": {
+                    "firstName": {
+                        "title": "firstName",
+                        "description": "User first name",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "title": "lastName",
+                        "description": "User last name",
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "gender": {
+                        "title": "gender",
+                        "description": "User's gender",
+                        "type": "string",
+                        "example": "m"
+                    },
+                    "mobileNumber": {
+                        "title": "mobileNumber",
+                        "description": "User's mobile number",
+                        "type": "string",
+                        "example": "0557001000"
+                    },
+                    "altMobileNumber": {
+                        "title": "altMobileNumber",
+                        "description": "User's alternative mobile number",
+                        "type": "string",
+                        "example": "0557001006"
+                    },
+                    "type": {
+                        "title": "type",
+                        "description": "Registration type",
+                        "type": "string",
+                        "example": "CUSTOMER / FIELD"
+                    }
+                },
+                "type": "object"
+            },
+            "SaveFieldRequest": {
+                "title": "Save field Request",
+                "description": "Save field request",
+                "required": [
+                    "accountNumber"
+                ],
+                "properties": {
+                    "accountNumber": {
+                        "title": "accountNumber",
+                        "description": "Account number",
+                        "type": "string",
+                        "example": "1000010001"
+                    },
+                    "amount": {
+                        "title": "amount",
+                        "description": "Amount",
+                        "type": "string",
+                        "example": "20"
+                    },
+                    "mobileNumber": {
+                        "title": "mobileNumber",
+                        "description": "Mobile number",
+                        "type": "string",
+                        "example": "0557888100"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
