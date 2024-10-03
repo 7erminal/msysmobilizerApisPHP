@@ -206,4 +206,66 @@ class NumberValidationApiController extends Controller
         return new ValidationResponseResource($respSummary, $respCode, $message);
         // Log::debug($resp);
     }
+
+    /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/name-inquiry/{number}",
+     *     @OA\Response(response="200", description="An example endpoint"),
+     *     @OA\Parameter(
+     *         name="number",
+     *         in="path",
+     *         description="Number",
+     *         required=true,
+     *      ),
+     * )
+     */
+    public function nameInquiryAccountNumber(string $number)
+    {
+        //
+        Log::debug("Request received");
+        Log::debug($number);
+
+        Log::debug("Calling procedure");
+        // Checking if number exists. Calling procedure.
+
+        Log::debug("Calling procedure 2");
+
+        $resp = DB::table('BKAccounts')
+        ->select('AccountName')
+        ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
+        ->where('BKAccountProduct.AccountNumber', $number)
+        ->get();
+
+        Log::debug("Response from query");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp[0]));
+        // Log::debug($resp[0]->Status);
+
+        $message = "Error validating number";
+        $respSummary = "";
+        $respCode = 500;
+
+        try{
+            if($resp->isNotEmpty()){
+                $message = "Validation Successful";
+                $respSummary = $resp[0]->AccountName;
+                $respCode = 200;
+            } else {
+                $message = "Customer not found.";
+                $respSummary = false;
+            }
+        } catch(Exception $e){
+            Log::error("Error::: ". $e);
+
+            $message = "Error validating number.";
+            $respSummary = "ERROR";
+        }
+        
+
+        return new ValidationResponseResource($respSummary, $respCode, $message);
+        // Log::debug($resp);
+    }
 }

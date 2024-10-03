@@ -279,6 +279,24 @@
                     }
                 }
             }
+        },
+        "/api/name-inquiry/{number}": {
+            "get": {
+                "operationId": "29e029148436eef20e4290bc651d3f0a",
+                "parameters": [
+                    {
+                        "name": "number",
+                        "in": "path",
+                        "description": "Number",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An example endpoint"
+                    }
+                }
+            }
         }
     },
     "components": {
