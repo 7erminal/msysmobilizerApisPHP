@@ -64,21 +64,21 @@ class NumberValidationApiController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    /**
-     * @OA\Get(
-     *     path="/api/number-category-validation/{number}",
-     *     @OA\Response(response="200", description="An example endpoint"),
-     *      @OA\Parameter(
-     *         name="number",
-     *         in="path",
-     *         description="Number",
-     *         required=true,
-     *      ),
-     * )
-     */
+    // /**
+    //  * Display the specified resource.
+    //  */
+    // /**
+    //  * @OA\Get(
+    //  *     path="/api/number-category-validation/{number}",
+    //  *     @OA\Response(response="200", description="An example endpoint"),
+    //  *      @OA\Parameter(
+    //  *         name="number",
+    //  *         in="path",
+    //  *         description="Number",
+    //  *         required=true,
+    //  *      ),
+    //  * )
+    //  */
     public function checkNumberCategory(string $number)
     {
         //

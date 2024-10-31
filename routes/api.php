@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 
-Route::get('/number-category-validation/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberCategory']);
+// Route::get('/number-category-validation/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberCategory']);
 Route::get('/existing-number/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberExist']);
 Route::post('/verify-pin', [App\Http\Controllers\AuthApiController::class, 'validatePin']);
 Route::post('/list-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3']);

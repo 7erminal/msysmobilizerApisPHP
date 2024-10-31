@@ -244,24 +244,6 @@
                 }
             }
         },
-        "/api/number-category-validation/{number}": {
-            "get": {
-                "operationId": "0143634736aac612b342e3a415805f27",
-                "parameters": [
-                    {
-                        "name": "number",
-                        "in": "path",
-                        "description": "Number",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "An example endpoint"
-                    }
-                }
-            }
-        },
         "/api/existing-number/{number}": {
             "get": {
                 "operationId": "c81f6ae466416e47e44d4debd66dd8e2",
