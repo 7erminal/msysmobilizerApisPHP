@@ -106,6 +106,7 @@ class NumberValidationApiController extends Controller
             } else if ($resp[0]->FieldStatus == 0){
                 $message = "Number validated. Number is a customer number.";
                 $respSummary = "CUSTOMER";
+                $respCode = 200;
             }
         } catch(Exception $e){
             Log::error("Error::: ". $e);
