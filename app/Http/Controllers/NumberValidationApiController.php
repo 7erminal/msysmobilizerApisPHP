@@ -115,7 +115,7 @@ class NumberValidationApiController extends Controller
             $respSummary = "ERROR";
         }
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return $respSummary;
         // Log::debug($resp);
     }
 
@@ -192,6 +192,8 @@ class NumberValidationApiController extends Controller
                 $message = "Number exists";
                 $respSummary = true;
                 $respCode = 200;
+
+                $message = $this->checkNumberCategory($number);
             } else if ($resp[0]->Status == 0){
                 $message = "Customer not found.";
                 $respSummary = false;
