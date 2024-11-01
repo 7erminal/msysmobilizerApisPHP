@@ -235,11 +235,12 @@ class NumberValidationApiController extends Controller
         // Checking if number exists. Calling procedure.
 
         Log::debug("Calling procedure 2");
+        Log::debug($number);
 
         $resp = DB::table('BKAccounts')
         ->select('AccountName')
-        ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
-        ->where('BKAccountProduct.AccountNumber', $number)
+        // ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
+        ->where('Mobile', $number)
         ->get();
 
         Log::debug("Response from query");
