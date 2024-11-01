@@ -243,10 +243,10 @@ class NumberValidationApiController extends Controller
         Log::debug($number);
 
         $resp = DB::table('BKAccounts')
-        ->select('AccountName')
-        // ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
-        ->where('Mobile', $number)
-        ->get();
+                ->select('AccountName')
+                // ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
+                ->where('Mobile', $number)
+                ->get();
 
         Log::debug("Response from query");
         Log::debug($resp);
@@ -263,8 +263,26 @@ class NumberValidationApiController extends Controller
                 $respSummary = $resp[0]->AccountName;
                 $respCode = 200;
             } else {
-                $message = "Customer not found.";
-                $respSummary = false;
+                $resp = DB::table('BKRelationshipManagers')
+                        ->select('RMgrName')
+                        // ->join('BKAccountProduct','BKAccounts.AccountID','=','BKAccountProduct.AccountID')
+                        ->where('RMgrPhone', $number)
+                        ->get();
+                try{
+                    if($resp->isNotEmpty()){
+                        $message = "Validation Successful";
+                        $respSummary = $resp[0]->RMgrName;
+                        $respCode = 200;
+                    } else {
+                        $message = "Customer not found.";
+                        $respSummary = false;
+                    }
+                } catch(Exception $e){
+                    Log::error("Error::: ". $e);
+        
+                    $message = "Error validating mobilization number.";
+                    $respSummary = "ERROR";
+                }
             }
         } catch(Exception $e){
             Log::error("Error::: ". $e);
