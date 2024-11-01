@@ -411,7 +411,7 @@ class AccountsApiController extends Controller
         // Calling procedure to credit account number
         $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $mobileNumber));
 
-        Log::debug("Response from procedure");
+        Log::debug("Response from add field deposit procedure:::");
         Log::debug($resp);
         // Log::debug(var_dump($resp[0]));
         // Log::debug($resp[0]->Status);
