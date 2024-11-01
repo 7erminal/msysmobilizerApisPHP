@@ -189,14 +189,19 @@ class NumberValidationApiController extends Controller
 
         try{
             if($resp[0]->Status == 1){
-                $message = "Number exists";
+                $message = "CUSTOMER";
                 $respSummary = true;
                 $respCode = 200;
-
-                $message = $this->checkNumberCategory($number);
             } else if ($resp[0]->Status == 0){
-                $message = "Customer not found.";
-                $respSummary = false;
+                $message = $this->checkNumberCategory($number);
+                $respSummary = true;
+                $respCode = 200;
+                if($message=="CUSTOMER"){
+                    $respCode = 500;
+                    $message = "Customer not found.";
+                    $respSummary = false;
+                }
+                
             }
         } catch(Exception $e){
             Log::error("Error::: ". $e);
