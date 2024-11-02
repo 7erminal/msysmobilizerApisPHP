@@ -8,6 +8,7 @@ use DB;
 use App\Http\Resources\AccountsResponseResource;
 use App\Http\Resources\ValidationResponseResource;
 use App\Http\Resources\AccountBalResponseResource;
+use App\Http\Resources\CustAccountsResponseResource;
 use App\Http\Functions\Functions;
 
 class AccountsApiController extends Controller
@@ -207,7 +208,7 @@ class AccountsApiController extends Controller
         }
         
 
-        return new AccountsResponseResource($resp, $respCode, $respMessage);
+        return new CustAccountsResponseResource($resp, $respCode, $respMessage);
     }
 
     /**
