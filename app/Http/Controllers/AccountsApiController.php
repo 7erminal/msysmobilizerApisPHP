@@ -8,9 +8,15 @@ use DB;
 use App\Http\Resources\AccountsResponseResource;
 use App\Http\Resources\ValidationResponseResource;
 use App\Http\Resources\AccountBalResponseResource;
+use App\Http\Functions\Functions;
 
 class AccountsApiController extends Controller
 {
+    public function __construct(Functions $functions){
+        // parent::__construct();
+        $this->functions = $functions;
+    }
+  
     /**
      * Display a listing of the resource.
      */
@@ -408,8 +414,14 @@ class AccountsApiController extends Controller
 
         Log::debug("Calling procedure");
 
+        Log::debug("Validated number is ");
+
+        $newNum = $this->functions->validateNumber($mobileNumber);
+
+        Log::debug($newNum);
+
         // Calling procedure to credit account number
-        $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $mobileNumber));
+        $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
 
         Log::debug("Response from add field deposit procedure:::");
         Log::debug($resp);
