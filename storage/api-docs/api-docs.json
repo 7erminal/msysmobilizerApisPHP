@@ -148,17 +148,6 @@
         "/api/get-contact-info": {
             "post": {
                 "operationId": "f2a5088ad458b06a01290ff68e569649",
-                "requestBody": {
-                    "description": "request parameters to list accounts",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AccountRequest"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Success"

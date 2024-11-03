@@ -379,11 +379,6 @@ class AccountsApiController extends Controller
      * @OA\Post(
      *     path="/api/get-contact-info",
      *     @OA\Response(response="200", description="Success"),
-     *     @OA\RequestBody(
-     *         description="request parameters to list accounts",
-     *         required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/AccountRequest")
-     *      ),
      *      @OA\Response(
      *          response=201,
      *          description="Successful operation"
@@ -405,10 +400,7 @@ class AccountsApiController extends Controller
     public function getContactInfo(Request $request)
     {
         //
-        $accountNumber = $request->accountNumber;
-
-        Log::debug("Request received");
-        Log::debug($accountNumber);
+        Log::debug("Request to get contact info received");
 
         Log::debug("Calling contact info procedure");
 
