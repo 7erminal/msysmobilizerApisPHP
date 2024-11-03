@@ -15,6 +15,7 @@ Route::post('/list-accounts', [App\Http\Controllers\AccountsApiController::class
 Route::post('/list-cust-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3Cust']);
 Route::post('/credit-account', [App\Http\Controllers\AccountsApiController::class, 'creditAccount']);
 Route::post('/account-balance', [App\Http\Controllers\AccountsApiController::class, 'checkAccountBalance']);
+Route::post('/get-contact-info', [App\Http\Controllers\AccountsApiController::class, 'getContactInfo']);
 Route::post('/field-deposit', [App\Http\Controllers\AccountsApiController::class, 'saveFieldDeposit']);
 Route::post('/register-account', [App\Http\Controllers\AuthApiController::class, 'registerAccount']);
 Route::get('/name-inquiry/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'nameInquiryAccountNumber']);

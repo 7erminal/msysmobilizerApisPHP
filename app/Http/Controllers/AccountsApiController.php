@@ -9,6 +9,7 @@ use App\Http\Resources\AccountsResponseResource;
 use App\Http\Resources\ValidationResponseResource;
 use App\Http\Resources\AccountBalResponseResource;
 use App\Http\Resources\CustAccountsResponseResource;
+use App\Http\Resources\ContactInfoResponseResource;
 use App\Http\Functions\Functions;
 
 class AccountsApiController extends Controller
@@ -369,6 +370,82 @@ class AccountsApiController extends Controller
         }
 
         return new AccountBalResponseResource($resp, $respCode, $respMessage);
+    }
+
+    /**
+     * Get Contact Info.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/get-contact-info",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to list accounts",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/AccountRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function getContactInfo(Request $request)
+    {
+        //
+        $accountNumber = $request->accountNumber;
+
+        Log::debug("Request received");
+        Log::debug($accountNumber);
+
+        Log::debug("Calling contact info procedure");
+
+        // Calling procedure to check account balance
+        $resp = DB::select('exec kafContactInfo');
+
+        Log::debug("Response from get contact info procedure");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp[0]));
+        // Log::debug($resp[0]);
+
+        $respCode = 500;
+        $respMessage = "Failed to get info";
+
+        try{
+            if($resp != null){
+                if(is_array($resp) && !empty($resp)){
+                    $respCode = 200;
+                    $respMessage = "Success";
+                    $resp = $resp[0];
+                } else {
+                    $respCode = 207;
+                    $respMessage = "Failed to get info";
+                    $resp = null;
+                }
+            } else {
+                $respCode = 209;
+                $respMessage = "Null response received. Unknown status.";
+                $resp = null;
+            }
+        } catch(Exception $e){
+            $respCode = 501;
+            $respMessage = "An error occured while getting contact info";
+            $resp = null;
+        }
+
+        return new ContactInfoResponseResource($resp, $respCode, $respMessage);
     }
 
     /**

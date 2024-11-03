@@ -24,7 +24,7 @@ class AccountDetailsResource extends JsonResource
             'AccountStatus' => $this->AccStatus,
             // 'SMSAlert' => $this->SMSAlert,
             // 'EmailAlert' => $this->EmailAlert,
-            // 'SharesBalance' => $this->SharesBalance
+            'SharesBalance' => $this->SharesBalance
         ] : null;
     }
 }
