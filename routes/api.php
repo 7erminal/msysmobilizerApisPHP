@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/number-category-validation/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberCategory']);
 Route::get('/existing-number/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberExist']);
 Route::post('/verify-pin', [App\Http\Controllers\AuthApiController::class, 'validatePin']);
+Route::post('/reset-pin', [App\Http\Controllers\AuthApiController::class, 'resetPin']);
 Route::post('/list-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3']);
 Route::post('/list-cust-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3Cust']);
 Route::post('/credit-account', [App\Http\Controllers\AccountsApiController::class, 'creditAccount']);

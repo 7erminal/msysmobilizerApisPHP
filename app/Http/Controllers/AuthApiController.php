@@ -125,6 +125,64 @@ class AuthApiController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/reset-pin",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to reset pin",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/NumberRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function resetPin(Request $request)
+    {
+        //
+        $number = $request->number;
+
+        Log::debug("Request received");
+        Log::debug($number);
+
+        $defaultPin = '1234';
+
+        Log::debug("Calling procedure");
+        // About to verify pin. Calling procedure.
+        $resp = DB::select('exec kafPINReset ?,?',array($number,$defaultPin));
+
+        Log::debug("Response from procedure");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp[0]));
+        // Log::debug($resp[0]->Status);
+
+        $message = "Pin reset successful";
+        $respSummary = "SUCCESS";
+        $respCode = 200;
+        
+
+        return new ValidationResponseResource($respSummary, $respCode, $message);
+        // Log::debug($resp);
+    }
+
+    /**
      * Save field deposit.
      */
     /**
