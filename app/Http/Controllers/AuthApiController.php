@@ -50,6 +50,39 @@ class AuthApiController extends Controller
         //
     }
 
+    public function pinValidationFunc(string $number, string $password){
+        $resp = DB::select('exec kafPINVerify ?,?',array($number,$password));
+
+        Log::debug("Response from pin validation procedure");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp[0]));
+        Log::debug($resp[0]->Status);
+
+        $message = "Error verifying credentials";
+        $respSummary = "";
+        $respCode = 500;
+
+        try{
+            if($resp[0]->Status == 1){
+                Log::debug("Successful validation");
+                $message = "Successful Verification";
+                $respSummary = true;
+                $respCode = 200;
+            } else if ($resp[0]->Status == 0){
+                Log::debug("Failed validation");
+                $message = "Sorry, credentials provided are incorrect.";
+                $respSummary = false;
+            }
+        } catch(Exception $e){
+            Log::error("Error::: ". $e);
+
+            $message = "Error verifying credentials";
+            $respSummary = "ERROR";
+        }
+
+        return new ValidationResponseResource($respSummary, $respCode, $message);
+    }
+
     /**
      * Display the specified resource.
      */
@@ -90,37 +123,12 @@ class AuthApiController extends Controller
         Log::debug($number);
         Log::debug($password);
 
-        Log::debug("Calling procedure");
+        Log::debug("Calling pin validation procedure");
         // About to verify pin. Calling procedure.
-        $resp = DB::select('exec kafPINVerify ?,?',array($number,$password));
-
-        Log::debug("Response from procedure");
-        Log::debug($resp);
-        // Log::debug(var_dump($resp[0]));
-        Log::debug($resp[0]->Status);
-
-        $message = "Error verifying credentials";
-        $respSummary = "";
-        $respCode = 500;
-
-        try{
-            if($resp[0]->Status == 1){
-                $message = "Successful Verification";
-                $respSummary = true;
-                $respCode = 200;
-            } else if ($resp[0]->Status == 0){
-                $message = "Sorry, credentials provided are incorrect.";
-                $respSummary = false;
-            }
-        } catch(Exception $e){
-            Log::error("Error::: ". $e);
-
-            $message = "Error verifying credentials";
-            $respSummary = "ERROR";
-        }
         
+        $resp = $this->pinValidationFunc($number, $password);
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return new ValidationResponseResource($resp->result, $resp->statusCode, $resp->statusDesc);
         // Log::debug($resp);
     }
 
@@ -164,18 +172,125 @@ class AuthApiController extends Controller
 
         $defaultPin = '1234';
 
-        Log::debug("Calling procedure");
+        // Log::debug("Calling procedure");
         // About to verify pin. Calling procedure.
-        $resp = DB::select('exec kafPINReset ?,?',array($number,$defaultPin));
+        // $resp = DB::select('exec kafPINReset ?,?',array($number,$defaultPin));
 
-        Log::debug("Response from procedure");
-        Log::debug($resp);
+        // Log::debug("Response from procedure");
+        // Log::debug($resp);
         // Log::debug(var_dump($resp[0]));
         // Log::debug($resp[0]->Status);
 
-        $message = "Pin reset successful";
+        $message = "Pin reset failed";
+        $respSummary = "FAILED";
+        $respCode = 500;
+
+        // try{
+        //     if($resp[0]->Status == 1){
+        //         Log::debug("Successful pin reset");
+        //         $message = "Successful pin reset";
+        //         $respSummary = true;
+        //         $respCode = 200;
+        //     } else if ($resp[0]->Status == 0){
+        //         Log::debug("Failed pin reset");
+        //         $message = "Sorry, pin reset failed.";
+        //         $respSummary = false;
+        //     }
+        // } catch(Exception $e){
+        //     Log::error("Error::: ". $e);
+
+        //     $message = "Error changing customer's pin.";
+        //     $respSummary = "ERROR";
+        // }
+
+        $message = "Pin reset request received and is being processed";
         $respSummary = "SUCCESS";
         $respCode = 200;
+        
+
+        return new ValidationResponseResource($respSummary, $respCode, $message);
+        // Log::debug($resp);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/change-pin",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to change pin",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/ChangePinRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function changePin(Request $request)
+    {
+        //
+        $number = $request->number;
+        $oldPin = $request->oldPassword;
+        $newPin = $request->newPassword;
+
+        Log::debug("Request received");
+        Log::debug($number);
+
+        // $defaultPin = '1234';
+
+        $message = "Failed to reset pin.";
+        $respSummary = "FAILED";
+        $respCode = 500;
+
+        $resp = $this->pinValidationFunc($number, $oldPin);
+
+        if($resp->statusCode == 200){
+            Log::debug("Calling pin reset procedure");
+            // About to verify pin. Calling procedure.
+            $resp = DB::select('exec kafPINReset ?,?',array($number,$newPin));
+
+            Log::debug("Response from procedure");
+            Log::debug($resp);
+
+            try{
+                if($resp[0]->Status == 1){
+                    Log::debug("Successful pin change");
+                    $message = "Successful pin change";
+                    $respSummary = true;
+                    $respCode = 200;
+                } else if ($resp[0]->Status == 0){
+                    Log::debug("Failed pin change");
+                    $message = "Sorry, pin change failed.";
+                    $respSummary = false;
+                }
+            } catch(Exception $e){
+                Log::error("Error::: ". $e);
+    
+                $message = "Error changing customer's pin.";
+                $respSummary = "ERROR";
+            }
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+        } else {
+            $message = "Error validating pin.";
+            $respSummary = "ERROR";
+        }
         
 
         return new ValidationResponseResource($respSummary, $respCode, $message);

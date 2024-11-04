@@ -266,6 +266,39 @@
                 }
             }
         },
+        "/api/change-pin": {
+            "post": {
+                "operationId": "1bf81c56c50124b0222f4da44a0623ee",
+                "requestBody": {
+                    "description": "request parameters to reset pin",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePinRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/register-account": {
             "post": {
                 "operationId": "a0965bc91eb2a0f86b8f67b45a789dbb",
@@ -350,6 +383,35 @@
                         "description": "Account number",
                         "type": "string",
                         "example": "1000010001"
+                    }
+                },
+                "type": "object"
+            },
+            "ChangePinRequest": {
+                "title": "Change Pin Request",
+                "description": "Request needed to change pin",
+                "required": [
+                    "number",
+                    "pin"
+                ],
+                "properties": {
+                    "number": {
+                        "title": "number",
+                        "description": "User Number",
+                        "type": "string",
+                        "example": "0557881327"
+                    },
+                    "oldPassword": {
+                        "title": "old password",
+                        "description": "User Password or Pin",
+                        "type": "string",
+                        "example": "0000"
+                    },
+                    "newPassword": {
+                        "title": "new password",
+                        "description": "User Password or Pin",
+                        "type": "string",
+                        "example": "0000"
                     }
                 },
                 "type": "object"
