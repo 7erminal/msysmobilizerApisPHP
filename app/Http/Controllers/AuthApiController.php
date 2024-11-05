@@ -132,80 +132,89 @@ class AuthApiController extends Controller
         // Log::debug($resp);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    /**
-     * @OA\Post(
-     *     path="/api/reset-pin",
-     *     @OA\Response(response="200", description="Success"),
-     *     @OA\RequestBody(
-     *         description="request parameters to reset pin",
-     *         required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/NumberRequest")
-     *      ),
-     *      @OA\Response(
-     *          response=201,
-     *          description="Successful operation"
-     *       ),
-     *      @OA\Response(
-     *          response=400,
-     *          description="Bad Request"
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      )
-     * )
-     */
+    // /**
+    //  * Display the specified resource.
+    //  */
+    // /**
+    //  * @OA\Post(
+    //  *     path="/api/reset-pin",
+    //  *     @OA\Response(response="200", description="Success"),
+    //  *     @OA\RequestBody(
+    //  *         description="request parameters to reset pin",
+    //  *         required=true,
+    //  *          @OA\JsonContent(ref="#/components/schemas/PinValidationRequest")
+    //  *      ),
+    //  *      @OA\Response(
+    //  *          response=201,
+    //  *          description="Successful operation"
+    //  *       ),
+    //  *      @OA\Response(
+    //  *          response=400,
+    //  *          description="Bad Request"
+    //  *      ),
+    //  *      @OA\Response(
+    //  *          response=401,
+    //  *          description="Unauthenticated",
+    //  *      ),
+    //  *      @OA\Response(
+    //  *          response=403,
+    //  *          description="Forbidden"
+    //  *      )
+    //  * )
+    //  */
     public function resetPin(Request $request)
     {
         //
         $number = $request->number;
+        $password = $request->password;
 
         Log::debug("Request received");
         Log::debug($number);
 
         $defaultPin = '1234';
 
-        // Log::debug("Calling procedure");
-        // About to verify pin. Calling procedure.
-        // $resp = DB::select('exec kafPINReset ?,?',array($number,$defaultPin));
-
-        // Log::debug("Response from procedure");
-        // Log::debug($resp);
-        // Log::debug(var_dump($resp[0]));
-        // Log::debug($resp[0]->Status);
-
         $message = "Pin reset failed";
         $respSummary = "FAILED";
         $respCode = 500;
 
-        // try{
-        //     if($resp[0]->Status == 1){
-        //         Log::debug("Successful pin reset");
-        //         $message = "Successful pin reset";
-        //         $respSummary = true;
-        //         $respCode = 200;
-        //     } else if ($resp[0]->Status == 0){
-        //         Log::debug("Failed pin reset");
-        //         $message = "Sorry, pin reset failed.";
-        //         $respSummary = false;
-        //     }
-        // } catch(Exception $e){
-        //     Log::error("Error::: ". $e);
+        $resp = $this->pinValidationFunc($number, $password);
 
-        //     $message = "Error changing customer's pin.";
-        //     $respSummary = "ERROR";
-        // }
+        if($resp->statusCode == 200){
+            // Log::debug("Calling procedure");
+            // About to verify pin. Calling procedure.
+            $resp = DB::select('exec kafPINReset ?,?',array($number,$defaultPin));
 
-        $message = "Pin reset request received and is being processed";
-        $respSummary = "SUCCESS";
-        $respCode = 200;
+            Log::debug("Response from pin reset procedure");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+
+            try{
+                if($resp[0]->Status == 1){
+                    Log::debug("Successful pin reset");
+                    $message = "Successful pin reset";
+                    $respSummary = true;
+                    $respCode = 200;
+                } else if ($resp[0]->Status == 0){
+                    Log::debug("Failed pin reset");
+                    $message = "Sorry, pin reset failed.";
+                    $respSummary = false;
+                }
+            } catch(Exception $e){
+                Log::error("Error::: ". $e);
+
+                $message = "Error changing customer's pin.";
+                $respSummary = "ERROR";
+            }
+        } else {
+            $message = "Error validating pin.";
+            $respSummary = "ERROR";
+        }
+
+        // $message = "Pin reset request received and is being processed";
+        // $respSummary = "SUCCESS";
+        // $respCode = 200;
         
 
         return new ValidationResponseResource($respSummary, $respCode, $message);
@@ -217,10 +226,10 @@ class AuthApiController extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/change-pin",
+     *     path="/api/reset-pin",
      *     @OA\Response(response="200", description="Success"),
      *     @OA\RequestBody(
-     *         description="request parameters to change pin",
+     *         description="request parameters to reset pin",
      *         required=true,
      *          @OA\JsonContent(ref="#/components/schemas/ChangePinRequest")
      *      ),
