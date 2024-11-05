@@ -123,6 +123,8 @@ class AuthApiController extends Controller
         Log::debug($number);
         Log::debug($password);
 
+        $password = hash('sha256', $password);
+
         Log::debug("Calling pin validation procedure");
         // About to verify pin. Calling procedure.
         
@@ -176,6 +178,8 @@ class AuthApiController extends Controller
         $message = "Pin reset failed";
         $respSummary = "FAILED";
         $respCode = 500;
+
+        $password = hash('sha256', $password);
 
         $resp = $this->pinValidationFunc($number, $password);
 
@@ -258,8 +262,15 @@ class AuthApiController extends Controller
         $oldPin = $request->oldPassword;
         $newPin = $request->newPassword;
 
+        $newPin = hash('sha256', $newPin);
+        $oldPin = hash('sha256', $oldPin);
+
         Log::debug("Request received");
         Log::debug($number);
+        Log::debug("Old pin is ");
+        Log::debug($oldPin);
+        Log::debug("New pin is ");
+        Log::debug($newPin);
 
         // $defaultPin = '1234';
 
