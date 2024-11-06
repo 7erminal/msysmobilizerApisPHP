@@ -20,7 +20,8 @@ Route::post('/credit-account', [App\Http\Controllers\AccountsApiController::clas
 Route::post('/account-balance', [App\Http\Controllers\AccountsApiController::class, 'checkAccountBalance']);
 Route::post('/get-contact-info', [App\Http\Controllers\AccountsApiController::class, 'getContactInfo']);
 Route::post('/field-deposit', [App\Http\Controllers\AccountsApiController::class, 'saveFieldDeposit']);
-Route::post('/register-account', [App\Http\Controllers\AuthApiController::class, 'registerAccount']);
+Route::post('/register-customer', [App\Http\Controllers\AuthApiController::class, 'registerAccount']);
+Route::post('/create-field-account', [App\Http\Controllers\AuthApiController::class, 'createFieldAccount']);
 Route::get('/name-inquiry/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'nameInquiryAccountNumber']);
 
 // curl -ivk http://127.0.0.1:8001/api/verify-pin

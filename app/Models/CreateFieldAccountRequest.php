@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @OA\Schema(
- *      title="Register Request",
- *      description="Register request",
+ *      title="Create Field Account Request",
+ *      description="Create Field Account request",
  *      type="object",
- *      required={"firstName","lastName","gender","mobileNumber"}
+ *      required={"firstName","lastName","gender","mobileNumber", "fieldAgentMobileNumber"}
  * )
  */
-class RegisterRequest extends Model
+class CreateFieldAccountRequest extends Model
 {
     use HasFactory;
 
@@ -53,11 +53,22 @@ class RegisterRequest extends Model
     /**
      * @OA\Property(
      *      title="mobileNumber",
-     *      description="User's mobile number",
+     *      description="Customer's mobile number",
      *      example="0557001000"
      * )
      *
      * @var string
      */
     public $mobileNumber;
+
+    /**
+     * @OA\Property(
+     *      title="fieldAgentMobileNumber",
+     *      description="Field Officer's mobile number",
+     *      example="0557001006"
+     * )
+     *
+     * @var string
+     */
+    public $agentMobileNumber;
 }
