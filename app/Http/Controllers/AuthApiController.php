@@ -326,7 +326,7 @@ class AuthApiController extends Controller
      *     path="/api/register-customer",
      *     @OA\Response(response="200", description="Success"),
      *     @OA\RequestBody(
-     *         description="request parameters to register user",
+     *         description="request parameters to register customer",
      *         required=true,
      *          @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
      *      ),
@@ -436,7 +436,7 @@ class AuthApiController extends Controller
      *     path="/api/create-field-account",
      *     @OA\Response(response="200", description="Success"),
      *     @OA\RequestBody(
-     *         description="request parameters to register user",
+     *         description="request parameters to create field agent account",
      *         required=true,
      *          @OA\JsonContent(ref="#/components/schemas/CreateFieldAccountRequest")
      *      ),

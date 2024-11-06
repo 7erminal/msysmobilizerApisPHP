@@ -270,7 +270,7 @@
             "post": {
                 "operationId": "411dd58a65624ad8f57d0202a7036f09",
                 "requestBody": {
-                    "description": "request parameters to register user",
+                    "description": "request parameters to register customer",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -303,7 +303,7 @@
             "post": {
                 "operationId": "b4551e532387d86ef5b0433442f241e8",
                 "requestBody": {
-                    "description": "request parameters to register user",
+                    "description": "request parameters to create field agent account",
                     "required": true,
                     "content": {
                         "application/json": {
