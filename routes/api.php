@@ -2,12 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::prefix('889901')->group(function () {
+Route::prefix(config('customConfig.clientId'))->group(function () {
     // Route::get('/number-category-validation/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberCategory']);
     Route::get('/existing-number/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'checkNumberExist']);
     Route::post('/verify-pin', [App\Http\Controllers\AuthApiController::class, 'validatePin']);

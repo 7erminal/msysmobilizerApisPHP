@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use DB;
 use App\Http\Resources\ValidationResponseResource;
+use Illuminate\Support\Facades\Config;
 use PDO;
 
 /**
@@ -141,6 +142,9 @@ class NumberValidationApiController extends Controller
         Log::debug($number);
 
         Log::debug("Calling procedure");
+        $client = config('customConfig.clientName');
+        Log::debug("Client Name is ");
+        Log::debug($client);
         // Checking if number exists. Calling procedure.
         // $dsn = 'sqlsrv:Database=MSysCBADev;Server=38.242.236.188;Port=1433';
         // $port = '1433';
@@ -190,16 +194,16 @@ class NumberValidationApiController extends Controller
         try{
             if($resp[0]->Status == 1){
                 $message = "CUSTOMER";
-                $respSummary = true;
+                $respSummary = $client;
                 $respCode = 200;
             } else if ($resp[0]->Status == 0){
                 $message = $this->checkNumberCategory($number);
-                $respSummary = true;
+                $respSummary = $client;
                 $respCode = 200;
                 if($message=="CUSTOMER"){
                     $respCode = 500;
                     $message = "Customer not found.";
-                    $respSummary = false;
+                    $respSummary = "";
                 }
                 
             }
