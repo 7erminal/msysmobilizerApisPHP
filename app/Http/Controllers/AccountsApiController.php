@@ -248,7 +248,7 @@ class AccountsApiController extends Controller
         $accountNumber = $request->accountNumber;
         $amount = $request->amount;
 
-        Log::debug("Request received");
+        Log::debug("Credit account Request received");
         Log::debug($accountNumber);
         Log::debug($amount);
 
@@ -257,7 +257,7 @@ class AccountsApiController extends Controller
         // Calling procedure to credit account number
         $resp = DB::select('exec addCustUSSDCredit ?, ?',array($accountNumber, $amount));
 
-        Log::debug("Response from procedure");
+        Log::debug("Response from procedure to credit account");
         Log::debug($resp);
         // Log::debug(var_dump($resp[0]));
         // Log::debug($resp[0]->Status);
@@ -292,6 +292,9 @@ class AccountsApiController extends Controller
             $respMessage = "An error occured while attempting to credit account";
             $resp = null;
         }
+
+        Log::debug("Sending credit account response back to gateway");
+        Log::debug($resp);
 
         return new ValidationResponseResource($resp, $respCode, $respMessage);
     }
