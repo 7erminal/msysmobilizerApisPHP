@@ -247,6 +247,7 @@ class AccountsApiController extends Controller
         //
         $accountNumber = $request->accountNumber;
         $amount = $request->amount;
+        $reference = $request->reference;
 
         Log::debug("Credit account Request received");
         Log::debug($accountNumber);
@@ -262,7 +263,7 @@ class AccountsApiController extends Controller
             $respMessage = "No amount entered";
         } else {
             // Calling procedure to credit account number
-            $resp = DB::select('exec addCustUSSDCredit ?, ?',array($accountNumber, $amount));
+            $resp = DB::select('exec addCustUSSDCredit ?, ?',array($accountNumber, $amount, $reference));
 
             Log::debug("Response from procedure to credit account");
             Log::debug($resp);
