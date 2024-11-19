@@ -499,44 +499,49 @@ class AccountsApiController extends Controller
 
         Log::debug($newNum);
 
-        // Calling procedure to credit account number
-        $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
-
-        Log::debug("Response from add field deposit procedure:::");
-        Log::debug($resp);
-        // Log::debug(var_dump($resp[0]));
-        // Log::debug($resp[0]->Status);
-
         $respCode = 500;
         $respMessage = "Failed to get account";
+        $resp = null;
 
-        try{
-            if($resp != null){
-                if(is_array($resp) && !empty($resp)){
-                    if($resp[0]->Status==1){
-                        $respCode = 200;
-                        $respMessage = "Deposit successful";
-                        $resp = "SUCCESS";
+        if(trim($amount)==""){
+            $respMessage = "No amount entered";
+        } else {
+            // Calling procedure to credit account number
+            $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
+
+            Log::debug("Response from add field deposit procedure:::");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+            try{
+                if($resp != null){
+                    if(is_array($resp) && !empty($resp)){
+                        if($resp[0]->Status==1){
+                            $respCode = 200;
+                            $respMessage = "Deposit successful";
+                            $resp = "SUCCESS";
+                        } else {
+                            $respCode = 206;
+                            $respMessage = "Deposit failed. Please check details and try again.";
+                            $resp = "FAILED";
+                        }
+                        
                     } else {
-                        $respCode = 206;
-                        $respMessage = "Deposit failed. Please check details and try again.";
-                        $resp = "FAILED";
+                        $respCode = 207;
+                        $respMessage = "Failed to deposit";
+                        $resp = null;
                     }
-                    
                 } else {
-                    $respCode = 207;
-                    $respMessage = "Failed to deposit";
+                    $respCode = 209;
+                    $respMessage = "Null response received. Unknown status.";
                     $resp = null;
                 }
-            } else {
-                $respCode = 209;
-                $respMessage = "Null response received. Unknown status.";
+            } catch(Exception $e){
+                $respCode = 501;
+                $respMessage = "An error occured while checking balance";
                 $resp = null;
             }
-        } catch(Exception $e){
-            $respCode = 501;
-            $respMessage = "An error occured while checking balance";
-            $resp = null;
         }
 
         return new ValidationResponseResource($resp, $respCode, $respMessage);
