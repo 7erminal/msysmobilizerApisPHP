@@ -254,44 +254,50 @@ class AccountsApiController extends Controller
 
         Log::debug("Calling procedure");
 
-        // Calling procedure to credit account number
-        $resp = DB::select('exec addCustUSSDCredit ?, ?',array($accountNumber, $amount));
-
-        Log::debug("Response from procedure to credit account");
-        Log::debug($resp);
-        // Log::debug(var_dump($resp[0]));
-        // Log::debug($resp[0]->Status);
-
         $respCode = 500;
         $respMessage = "Failed to get accounts";
+        $resp = null;
 
-        try{
-            if($resp != null){
-                if(is_array($resp) && !empty($resp)){
-                    if($resp[0]->Status==1){
-                        $respCode = 200;
-                        $respMessage = "Success";
-                        $resp = "SUCCESS";
+        if(trim($amount)==""){
+            $respMessage = "No amount entered";
+        } else {
+            // Calling procedure to credit account number
+            $resp = DB::select('exec addCustUSSDCredit ?, ?',array($accountNumber, $amount));
+
+            Log::debug("Response from procedure to credit account");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+            try{
+                if($resp != null){
+                    if(is_array($resp) && !empty($resp)){
+                        if($resp[0]->Status==1){
+                            $respCode = 200;
+                            $respMessage = "Success";
+                            $resp = "SUCCESS";
+                        } else {
+                            $respCode = 301;
+                            $respMessage = "Failed";
+                            $resp = "FAILED";
+                        }
                     } else {
-                        $respCode = 301;
-                        $respMessage = "Failed";
-                        $resp = "FAILED";
+                        $respCode = 207;
+                        $respMessage = "Unable to credit account";
+                        $resp = null;
                     }
                 } else {
-                    $respCode = 207;
-                    $respMessage = "Unable to credit account";
+                    $respCode = 209;
+                    $respMessage = "Null response received. Unknown payment status.";
                     $resp = null;
                 }
-            } else {
-                $respCode = 209;
-                $respMessage = "Null response received. Unknown payment status.";
+            } catch(Exception $e){
+                $respCode = 501;
+                $respMessage = "An error occured while attempting to credit account";
                 $resp = null;
             }
-        } catch(Exception $e){
-            $respCode = 501;
-            $respMessage = "An error occured while attempting to credit account";
-            $resp = null;
         }
+        
 
         Log::debug("Sending credit account response back to gateway");
         Log::debug($resp);
