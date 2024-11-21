@@ -11,6 +11,7 @@ use App\Http\Resources\AccountBalResponseResource;
 use App\Http\Resources\CustAccountsResponseResource;
 use App\Http\Resources\ContactInfoResponseResource;
 use App\Http\Functions\Functions;
+use Illuminate\Support\Facades\Config;
 
 class AccountsApiController extends Controller
 {
@@ -99,6 +100,8 @@ class AccountsApiController extends Controller
 
         Log::debug("Calling procedure");
 
+        $client = config('customConfig.clientName');
+
         // Calling procedure to get accounts
         $resp = DB::select('exec kafStartField ?',array($id));
 
@@ -132,7 +135,7 @@ class AccountsApiController extends Controller
         }
         
 
-        return new AccountsResponseResource($resp, $respCode, $respMessage);
+        return new AccountsResponseResource($resp, $respCode, $respMessage, $client);
     }
 
 
@@ -170,6 +173,7 @@ class AccountsApiController extends Controller
     {
         //
         $number = $request->number;
+        $client = config('customConfig.clientName');
 
         Log::debug("Request received");
         Log::debug($number);
@@ -209,7 +213,7 @@ class AccountsApiController extends Controller
         }
         
 
-        return new CustAccountsResponseResource($resp, $respCode, $respMessage);
+        return new CustAccountsResponseResource($resp, $respCode, $respMessage, $client);
     }
 
     /**
@@ -254,6 +258,8 @@ class AccountsApiController extends Controller
         Log::debug($accountNumber);
         Log::debug($amount);
         Log::debug($reference);
+
+        $client = config('customConfig.clientName');
 
         Log::debug("Calling procedure:::");
 
@@ -305,7 +311,7 @@ class AccountsApiController extends Controller
         Log::debug("Sending credit account response back to gateway");
         Log::debug($resp);
 
-        return new ValidationResponseResource($resp, $respCode, $respMessage);
+        return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
     }
 
     /**
@@ -348,6 +354,8 @@ class AccountsApiController extends Controller
 
         Log::debug("Calling procedure");
 
+        $client = config('customConfig.clientName');
+
         // Calling procedure to check account balance
         $resp = DB::select('exec getAccountBalance ?',array($accountNumber));
 
@@ -381,7 +389,7 @@ class AccountsApiController extends Controller
             $resp = null;
         }
 
-        return new AccountBalResponseResource($resp, $respCode, $respMessage);
+        return new AccountBalResponseResource($resp, $respCode, $respMessage, $client);
     }
 
     /**
@@ -415,6 +423,7 @@ class AccountsApiController extends Controller
         Log::debug("Request to get contact info received");
 
         Log::debug("Calling contact info procedure");
+        $client = config('customConfig.clientName');
 
         // Calling procedure to check account balance
         $resp = DB::select('exec kafContactInfo');
@@ -449,7 +458,7 @@ class AccountsApiController extends Controller
             $resp = null;
         }
 
-        return new ContactInfoResponseResource($resp, $respCode, $respMessage);
+        return new ContactInfoResponseResource($resp, $respCode, $respMessage, $client);
     }
 
     /**
@@ -488,6 +497,8 @@ class AccountsApiController extends Controller
         $accountNumber = $request->accountNumber;
         $amount = $request->amount;
         $mobileNumber = $request->mobileNumber;
+
+        $client = config('customConfig.clientName');
 
         Log::debug("Request received");
         Log::debug($accountNumber);
@@ -547,6 +558,6 @@ class AccountsApiController extends Controller
             }
         }
 
-        return new ValidationResponseResource($resp, $respCode, $respMessage);
+        return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
     }
 }

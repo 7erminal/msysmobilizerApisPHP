@@ -10,11 +10,12 @@ use App\Http\Resources\ContactInfoResource;
 
 class ContactInfoResponseResource extends JsonResource
 {
-    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success')
+    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success', $client = "")
     {
         parent::__construct($resource);
         $this->statusCode = $statusCode;
         $this->statusDesc = $statusDesc;
+        $this->client = $client;
     }
     /**
      * Transform the resource into an array.
@@ -27,6 +28,7 @@ class ContactInfoResponseResource extends JsonResource
             'StatusCode' => $this->statusCode,
             'StatusDesc' => $this->statusDesc,
             'Result' => $this->resource ? new ContactInfoResource($this->resource) : null,
+            'Client' => $this->client,
         ];
     }
 }

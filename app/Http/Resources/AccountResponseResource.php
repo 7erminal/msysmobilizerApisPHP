@@ -8,11 +8,12 @@ use App\Http\Resources\AccountResource;
 
 class AccountResponseResource extends JsonResource
 {
-    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success')
+    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success', $client = "")
     {
         parent::__construct($resource);
         $this->statusCode = $statusCode;
         $this->statusDesc = $statusDesc;
+        $this->client = $client;
     }
     /**
      * Transform the resource into an array.
@@ -25,6 +26,7 @@ class AccountResponseResource extends JsonResource
             'StatusCode' => $this->responseCode,
             'StatusDesc' => $this->responseMessage,
             'Result' => $this->resource ? new AccountResource($this->resource) : null,
+            'Client' => $this->client,
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use DB;
 use App\Http\Resources\ValidationResponseResource;
 use App\Http\Resources\UserResponseResource;
+use Illuminate\Support\Facades\Config;
 
 class AuthApiController extends Controller
 {
@@ -62,6 +63,8 @@ class AuthApiController extends Controller
         $respSummary = "";
         $respCode = 500;
 
+        $client = config('customConfig.clientName');
+
         try{
             if($resp[0]->Status == 1){
                 Log::debug("Successful validation");
@@ -80,7 +83,7 @@ class AuthApiController extends Controller
             $respSummary = "ERROR";
         }
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return new ValidationResponseResource($respSummary, $respCode, $message, $client);
     }
 
     /**
@@ -123,6 +126,8 @@ class AuthApiController extends Controller
         Log::debug($number);
         Log::debug($password);
 
+        $client = config('customConfig.clientName');
+
         $password = hash('sha256', $password);
 
         Log::debug("Calling pin validation procedure");
@@ -131,7 +136,7 @@ class AuthApiController extends Controller
         
         $resp = $this->pinValidationFunc($number, $password);
 
-        return new ValidationResponseResource($resp->result, $resp->statusCode, $resp->statusDesc);
+        return new ValidationResponseResource($resp->result, $resp->statusCode, $resp->statusDesc, $client);
         // Log::debug($resp);
     }
 
@@ -266,6 +271,8 @@ class AuthApiController extends Controller
         $newPin = hash('sha256', $newPin);
         $oldPin = hash('sha256', $oldPin);
 
+        $client = config('customConfig.clientName');
+
         Log::debug("Request received");
         Log::debug($number);
         Log::debug("Old pin is ");
@@ -314,7 +321,7 @@ class AuthApiController extends Controller
         }
         
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return new ValidationResponseResource($respSummary, $respCode, $message, $client);
         // Log::debug($resp);
     }
 
@@ -358,6 +365,8 @@ class AuthApiController extends Controller
         $type = "CUSTOMER";
 
         $proceed = true;
+
+        $client = config('customConfig.clientName');
 
         Log::debug("Request received");
         Log::debug($firstName);
@@ -425,7 +434,7 @@ class AuthApiController extends Controller
             // Log::debug($resp[0]->Status);
         }
 
-        return new UserResponseResource($resp, $respCode, $message, $type);
+        return new UserResponseResource($resp, $respCode, $message, $type, $client);
     }
 
     /**
@@ -469,6 +478,8 @@ class AuthApiController extends Controller
         $type = "FIELD AGENT ACCOUNT";
 
         $proceed = true;
+
+        $client = config('customConfig.clientName');
 
         Log::debug("Request received");
         Log::debug($firstName);
@@ -538,6 +549,6 @@ class AuthApiController extends Controller
             // Log::debug($resp[0]->Status);
         }
 
-        return new UserResponseResource($resp, $respCode, $message, $type);
+        return new UserResponseResource($resp, $respCode, $message, $type, $client);
     }
 }

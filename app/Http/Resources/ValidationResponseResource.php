@@ -7,11 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ValidationResponseResource extends JsonResource
 {
-    public function __construct($result, $statusCode = 200, $statusDesc = 'Success')
+    public function __construct($result, $statusCode = 200, $statusDesc = 'Success', $client = "")
     {
         $this->result = $result;
         $this->statusCode = $statusCode;
         $this->statusDesc = $statusDesc;
+        $this->client = $client;
     }
     /**
      * Transform the resource into an array.
@@ -23,7 +24,8 @@ class ValidationResponseResource extends JsonResource
         return [
             'StatusCode' => $this->statusCode,
             'StatusDesc' => $this->statusDesc,
-            'Result' => $this->result
+            'Result' => $this->result,
+            'Client' => $this->client,
         ];
     }
 }

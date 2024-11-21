@@ -11,11 +11,12 @@ use App\Http\Resources\CustAccountResource;
 
 class CustAccountsResponseResource extends JsonResource
 {
-    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success')
+    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success', $client = "")
     {
         parent::__construct($resource);
         $this->statusCode = $statusCode;
         $this->statusDesc = $statusDesc;
+        $this->client = $client;
     }
     /**
      * Transform the resource into an array.
@@ -30,6 +31,7 @@ class CustAccountsResponseResource extends JsonResource
             'Result' => $this->resource ? collect($this->resource)->map(function ($item) {
                 return new CustAccountResource($item);
             }) : null,
+            'Client' => $this->client,
         ];
     }
 }

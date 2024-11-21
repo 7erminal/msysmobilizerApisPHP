@@ -145,38 +145,6 @@ class NumberValidationApiController extends Controller
         $client = config('customConfig.clientName');
         Log::debug("Client Name is ");
         Log::debug($client);
-        // Checking if number exists. Calling procedure.
-        // $dsn = 'sqlsrv:Database=MSysCBADev;Server=38.242.236.188;Port=1433';
-        // $port = '1433';
-        // $user = 'apidevsa';
-        // $password = 'dev@msysapi24gh!';
-
-        // try
-        // {
-        //     Log::debug("Setting up connection");
-        //     // new PDO("sqlsrv:Server=YouAddress;Database=YourDatabase", "Username", "Password");
-        //     $dbh = new PDO($dsn, $user, $password);
-        //     Log::debug("Call procedure");
-        //     $sql = 'CALL kafStartCust(?)';
-        //     $stmt = $conn->prepare($sql);
-
-        //     $stmt->bindParam(1, $number, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT, 32);
-        //     // $stmt->bindParam(2, $weight, PDO::PARAM_INT, 10);
-
-        //     Log::debug("Statement created ");
-        //     Log::debug($stmt);
-
-        //     $resp = $stmt->execute();
-
-        //     Log::debug("Response from procedure");
-        //     Log::debug($resp);
-        //     Log::debug(var_dump($resp[0]));
-        //     Log::debug($resp[0]->Status);
-        // }
-        // catch (PDOException $e)
-        // {
-        //     echo 'Connection failed: ' . $e->getMessage();
-        // }
 
         Log::debug("Calling procedure 2");
 
@@ -215,7 +183,7 @@ class NumberValidationApiController extends Controller
         }
         
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return new ValidationResponseResource($respSummary, $respCode, $message, $client);
         // Log::debug($resp);
     }
 
@@ -245,6 +213,8 @@ class NumberValidationApiController extends Controller
 
         Log::debug("Calling procedure 2");
         Log::debug($number);
+
+        $client = config('customConfig.clientName');
 
         $resp = DB::table('BKAccounts')
                 ->select('AccountName')
@@ -296,7 +266,7 @@ class NumberValidationApiController extends Controller
         }
         
 
-        return new ValidationResponseResource($respSummary, $respCode, $message);
+        return new ValidationResponseResource($respSummary, $respCode, $message, $client);
         // Log::debug($resp);
     }
 }
