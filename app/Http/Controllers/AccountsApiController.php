@@ -95,7 +95,7 @@ class AccountsApiController extends Controller
         //
         $id = $request->id;
 
-        Log::debug("Request received");
+        Log::debug("Request received to list first 3 accounts");
         Log::debug($id);
 
         Log::debug("Calling procedure");
@@ -105,7 +105,7 @@ class AccountsApiController extends Controller
         // Calling procedure to get accounts
         $resp = DB::select('exec kafStartField ?',array($id));
 
-        Log::debug("Response from procedure");
+        Log::debug("Response from procedure to list first 3 accounts");
         Log::debug($resp);
         // Log::debug(var_dump($resp));
         // Log::debug($resp[0]->AccountNumber);
@@ -119,16 +119,19 @@ class AccountsApiController extends Controller
                     $respCode = 200;
                     $respMessage = "Data retrieved successfully";
                 } else {
+                    Log::debug("No accounts found");
                     $respCode = 207;
                     $respMessage = "No accounts found";
                     $resp = null;
                 }
             } else {
+                Log::debug("Null response. No accounts found");
                 $respCode = 206;
                 $respMessage = "No accounts found";
                 $resp = null;
             }
         } catch(Exception $e){
+            Log::debug("An error occurred. No accounts found");
             $respCode = 501;
             $respMessage = "Failed to get accounts";
             $resp = null;
@@ -175,15 +178,15 @@ class AccountsApiController extends Controller
         $number = $request->number;
         $client = config('customConfig.clientName');
 
-        Log::debug("Request received");
+        Log::debug("Request received to list first 3 cust accounts");
         Log::debug($number);
 
-        Log::debug("Calling procedure");
+        Log::debug("Calling procedure to list first 3 cust accounts");
 
         // Calling procedure to get accounts
         $resp = DB::select('exec kafCustAccounts ?',array($number));
 
-        Log::debug("Response from procedure");
+        Log::debug("Response from procedure to list first 3 cust accounts");
         Log::debug($resp);
         // Log::debug(var_dump($resp));
         // Log::debug($resp[0]->AccountNumber);
@@ -207,6 +210,7 @@ class AccountsApiController extends Controller
                 $resp = null;
             }
         } catch(Exception $e){
+            Log::error("An error occurred. Unable to fetch accounts");
             $respCode = 501;
             $respMessage = "Failed to get accounts";
             $resp = null;
@@ -261,7 +265,7 @@ class AccountsApiController extends Controller
 
         $client = config('customConfig.clientName');
 
-        Log::debug("Calling procedure:::");
+        Log::debug("Calling procedure to credit account:::");
 
         $respCode = 500;
         $respMessage = "Failed to get accounts";
@@ -282,10 +286,12 @@ class AccountsApiController extends Controller
                 if($resp != null){
                     if(is_array($resp) && !empty($resp)){
                         if($resp[0]->Status==1){
+                            Log::debug("Credit account request was successful");
                             $respCode = 200;
                             $respMessage = "Success";
                             $resp = "SUCCESS";
                         } else {
+                            Log::debug("Credit account request failed");
                             $respCode = 301;
                             $respMessage = "Failed";
                             $resp = "FAILED";
@@ -349,17 +355,17 @@ class AccountsApiController extends Controller
         //
         $accountNumber = $request->accountNumber;
 
-        Log::debug("Request received");
+        Log::debug("Request received to check account balance");
         Log::debug($accountNumber);
 
-        Log::debug("Calling procedure");
+        Log::debug("Calling procedure to check account balance");
 
         $client = config('customConfig.clientName');
 
         // Calling procedure to check account balance
         $resp = DB::select('exec getAccountBalance ?',array($accountNumber));
 
-        Log::debug("Response from procedure");
+        Log::debug("Response from procedure to get account balance");
         Log::debug($resp);
         // Log::debug(var_dump($resp[0]));
         // Log::debug($resp[0]->Status);
@@ -370,20 +376,24 @@ class AccountsApiController extends Controller
         try{
             if($resp != null){
                 if(is_array($resp) && !empty($resp)){
+                    Log::debug("Successful account balance check");
                     $respCode = 200;
                     $respMessage = "Success";
                     $resp = $resp[0];
                 } else {
+                    Log::error("Failed account balance check");
                     $respCode = 207;
                     $respMessage = "Failed to get balance";
                     $resp = null;
                 }
             } else {
+                Log::error("Null response. Account balance check failed");
                 $respCode = 209;
                 $respMessage = "Null response received. Unknown status.";
                 $resp = null;
             }
         } catch(Exception $e){
+            Log::error("An error occurred. Failed to get account balance");
             $respCode = 501;
             $respMessage = "An error occured while checking balance";
             $resp = null;
@@ -500,12 +510,12 @@ class AccountsApiController extends Controller
 
         $client = config('customConfig.clientName');
 
-        Log::debug("Request received");
+        Log::debug("Request received for field deposit");
         Log::debug($accountNumber);
         Log::debug($amount);
         Log::debug($mobileNumber);
 
-        Log::debug("Calling procedure");
+        Log::debug("Calling procedure for field deposit");
 
         Log::debug("Validated number is ");
 
@@ -518,8 +528,11 @@ class AccountsApiController extends Controller
         $resp = null;
 
         if(trim($amount)==""){
+            Log::error("No amount entered");
             $respMessage = "No amount entered";
         } else {
+            Log::debug("Request sent:::");
+            Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
             // Calling procedure to credit account number
             $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
 
@@ -532,26 +545,31 @@ class AccountsApiController extends Controller
                 if($resp != null){
                     if(is_array($resp) && !empty($resp)){
                         if($resp[0]->Status==1){
+                            Log::error("Field deposit successful:::");
                             $respCode = 200;
                             $respMessage = "Deposit successful";
                             $resp = "SUCCESS";
                         } else {
+                            Log::error("Field deposit failed:::");
                             $respCode = 206;
                             $respMessage = "Deposit failed. Please check details and try again.";
                             $resp = "FAILED";
                         }
                         
                     } else {
+                        Log::error("Field deposit failed:::empty response");
                         $respCode = 207;
                         $respMessage = "Failed to deposit";
                         $resp = null;
                     }
                 } else {
+                    Log::error("Field deposit failed:::Null response");
                     $respCode = 209;
                     $respMessage = "Null response received. Unknown status.";
                     $resp = null;
                 }
             } catch(Exception $e){
+                Log::error("An error occurred. Field deposit failed:::");
                 $respCode = 501;
                 $respMessage = "An error occured while checking balance";
                 $resp = null;
