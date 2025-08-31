@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class coops extends Controller
+class CoopsController extends Controller
 {
     //
     /**
@@ -175,12 +175,12 @@ class coops extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/approve-account",
+     *     path="/api/activate-verified-customer",
      *     @OA\Response(response="200", description="Success"),
      *     @OA\RequestBody(
      *         description="request parameters to list accounts",
      *         required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/IdRequest")
+     *          @OA\JsonContent(ref="#/components/schemas/ActivateAccountRequest")
      *      ),
      *      @OA\Response(
      *          response=201,
@@ -200,7 +200,7 @@ class coops extends Controller
      *      )
      * )
      */
-     public function approveAccount(Request $request)
+     public function activateVerifiedCustomer(Request $request)
     {
         //
         $username = $request->username;
@@ -229,8 +229,9 @@ class coops extends Controller
                 if(is_array($resp) && !empty($resp)){
                     $respCode = 200;
                     $respMessage = "Data retrieved successfully";
+                    Log::debug("Account approved successfully");
                 } else {
-                    Log::debug("No accounts found");
+                    Log::debug("Account approval failed");
                     $respCode = 207;
                     $respMessage = "No accounts found";
                     $resp = null;
