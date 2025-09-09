@@ -26,7 +26,7 @@ Route::prefix(config('customConfig.clientId'))->group(function () {
     Route::get('/name-inquiry/{number}', [App\Http\Controllers\NumberValidationApiController::class, 'nameInquiryAccountNumber']);
     Route::post('/verify-customer', [App\Http\Controllers\CoopsController::class, 'verifyCustomer']);
     Route::get('/fetch-approved-accounts', [App\Http\Controllers\CoopsController::class, 'fetchApprovedAccounts']);
-    Route::post('/activate-verified-customer', [App\Http\Controllers\CoopsController::class, 'activateVerifiedCustomer']);
+    Route::post('/activate-verified-customer', [App\Http\Controllers\CoopsController::class, 'activateVerifiedCustomer']); 
 });
 // curl -ivk http://127.0.0.1:8001/api/verify-pin
 // --header 'Content-Type: application/json' \

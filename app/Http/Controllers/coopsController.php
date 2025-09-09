@@ -12,7 +12,7 @@ use App\Http\Resources\ApprovedAccountsResponseResource;
 
 class CoopsController extends Controller
 {
-    //
+    // COOPS
     /**
      * Display the specified resource.
      */
