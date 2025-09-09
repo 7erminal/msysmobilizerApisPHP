@@ -60,6 +60,16 @@ class CoopsController extends Controller
         //     Log::error("Invalid date of birth format: " . $dob);
         //     return response()->json(['error' => 'Invalid date of birth format'], 400);
         // }
+
+        Log::debug('VerifyCustomer request payload: ' . json_encode([
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+            'gender' => $gender,
+            'dob' => $dob,
+            'mobileNumber' => $mobileNumber,
+        ]));
         
 
         Log::debug("Request received to verify customer");
@@ -72,7 +82,7 @@ class CoopsController extends Controller
         // Calling procedure to get accounts
         $resp = DB::select('exec kafCOOPSSignup ?, ?, ?, ?, ?, ?, ?',array($username, $firstName, $lastName, $mobileNumber, $email, $gender, $dob));
 
-        Log::debug("Response from procedure to list first 3 accounts");
+        Log::debug("Response from procedure to verify customer");
         Log::debug($resp);
         // Log::debug(var_dump($resp));
         // Log::debug($resp[0]->AccountNumber);
