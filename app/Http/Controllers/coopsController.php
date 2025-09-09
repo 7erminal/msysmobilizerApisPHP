@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use DB;
+use Carbon\Carbon;
+use App\Http\Resources\VerifyCustomerResponseResource;
+use App\Http\Resources\AccountsResponseResource;
+use App\Http\Resources\ApprovedAccountsResponseResource;
 
 class CoopsController extends Controller
 {
@@ -48,6 +54,14 @@ class CoopsController extends Controller
         $dob = $request->dob;
         $mobileNumber = $request->mobileNumber;
 
+        // try {
+        //     $dob = \Carbon\Carbon::parse($dob)->format('Y-m-d');
+        // } catch (\Exception $e) {
+        //     Log::error("Invalid date of birth format: " . $dob);
+        //     return response()->json(['error' => 'Invalid date of birth format'], 400);
+        // }
+        
+
         Log::debug("Request received to verify customer");
         Log::debug($username);
 
@@ -56,7 +70,7 @@ class CoopsController extends Controller
         $client = config('customConfig.clientName');
 
         // Calling procedure to get accounts
-        $resp = DB::select('exec kafCOOPSSignup ?, ?, ?, ?, ?, ?, ?',array($username, $firstName, $lastName, $email, $gender, $dob, $mobileNumber));
+        $resp = DB::select('exec kafCOOPSSignup ?, ?, ?, ?, ?, ?, ?',array($username, $firstName, $lastName, $mobileNumber, $email, $gender, $dob));
 
         Log::debug("Response from procedure to list first 3 accounts");
         Log::debug($resp);
@@ -69,24 +83,36 @@ class CoopsController extends Controller
         try{
             if($resp != null){
                 if(is_array($resp) && !empty($resp)){
-                    $respCode = 200;
-                    $respMessage = "Data retrieved successfully";
+                    if(isset($resp[0]->Status) && $resp[0]->Status == 0){
+                        Log::debug("Customer verification in progress");
+                        Log::debug($resp);
+                        Log::debug("Customer verified successfully");
+                        $respCode = 200;
+                        $respMessage = "Verified customer successfully";
+                        $resp = $respMessage;
+                    } else {
+                        Log::debug("Customer verification response indicates failure");
+                        Log::debug($resp);
+                        $resp = null;
+                        $respCode = 207;
+                        $respMessage = "Unable to verify customer";
+                    }
                 } else {
-                    Log::debug("No accounts found");
+                    Log::debug("Unable to verify customer");
                     $respCode = 207;
-                    $respMessage = "No accounts found";
+                    $respMessage = "Unable to verify customer";
                     $resp = null;
                 }
             } else {
-                Log::debug("Null response. No accounts found");
+                Log::debug("Null response. Unable to verify customer");
                 $respCode = 206;
-                $respMessage = "No accounts found";
+                $respMessage = "Unable to verify customer";
                 $resp = null;
             }
         } catch(Exception $e){
-            Log::debug("An error occurred. No accounts found");
+            Log::debug("An error occurred. Unable to verify customer");
             $respCode = 501;
-            $respMessage = "Failed to get accounts";
+            $respMessage = "Failed to verify customer";
             $resp = null;
         }
         
@@ -131,6 +157,8 @@ class CoopsController extends Controller
 
         $client = config('customConfig.clientName');
 
+        Log::debug("Client name is ".$client);
+
         // Calling procedure to get accounts
         $resp = DB::select('exec kafCOOPSApproved');
 
@@ -145,6 +173,8 @@ class CoopsController extends Controller
         try{
             if($resp != null){
                 if(is_array($resp) && !empty($resp)){
+                    Log::debug("Accounts fetched successfully");
+                    Log::debug($resp);
                     $respCode = 200;
                     $respMessage = "Data retrieved successfully";
                 } else {
@@ -167,7 +197,7 @@ class CoopsController extends Controller
         }
         
 
-        return new AccountsResponseResource($resp, $respCode, $respMessage, $client);
+        return new ApprovedAccountsResponseResource($resp, $respCode, $respMessage, $client);
     }
 
     /**
@@ -207,7 +237,8 @@ class CoopsController extends Controller
         $mobileNumber = $request->mobileNumber;
 
         Log::debug("Request received to approve account");
-        Log::debug($id);
+        Log::debug($username);
+        Log::debug($mobileNumber);
 
         Log::debug("Calling procedure");
 
@@ -227,6 +258,8 @@ class CoopsController extends Controller
         try{
             if($resp != null){
                 if(is_array($resp) && !empty($resp)){
+                    Log::debug("Account approved successfully");
+                    Log::debug($resp);
                     $respCode = 200;
                     $respMessage = "Data retrieved successfully";
                     Log::debug("Account approved successfully");
@@ -239,17 +272,17 @@ class CoopsController extends Controller
             } else {
                 Log::debug("Null response. No accounts found");
                 $respCode = 206;
-                $respMessage = "No accounts found";
+                $respMessage = "Failed to activate account";
                 $resp = null;
             }
         } catch(Exception $e){
             Log::debug("An error occurred. No accounts found");
             $respCode = 501;
-            $respMessage = "Failed to get accounts";
+            $respMessage = "Failed to activate account";
             $resp = null;
         }
         
 
-        return new AccountsResponseResource($resp, $respCode, $respMessage, $client);
+        return new VerifyCustomerResponseResource($resp, $respCode, $respMessage, $client);
     }
 }

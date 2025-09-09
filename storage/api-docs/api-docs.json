@@ -332,6 +332,94 @@
                 }
             }
         },
+        "/api/verify-customer": {
+            "post": {
+                "operationId": "9c1b5aba02a71595743cf49d425e279e",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/fetch-approved-accounts": {
+            "get": {
+                "operationId": "b2dbc672a279965bab3a94016e307bf1",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/activate-verified-customer": {
+            "post": {
+                "operationId": "04ab9727ca74bdaaebb3e0fd2b8e525b",
+                "requestBody": {
+                    "description": "request parameters to list accounts",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActivateAccountRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/existing-number/{number}": {
             "get": {
                 "operationId": "c81f6ae466416e47e44d4debd66dd8e2",
@@ -383,6 +471,33 @@
                         "description": "Account number",
                         "type": "string",
                         "example": "1000010001"
+                    }
+                },
+                "type": "object"
+            },
+            "ActivateAccountRequest": {
+                "title": "Verify Customer Request",
+                "description": "Verify customer request",
+                "required": [
+                    "username",
+                    "firstName",
+                    "lastName",
+                    "gender",
+                    "dob",
+                    "mobileNumber"
+                ],
+                "properties": {
+                    "username": {
+                        "title": "username",
+                        "description": "Username",
+                        "type": "string",
+                        "example": "henok"
+                    },
+                    "mobileNumber": {
+                        "title": "mobileNumber",
+                        "description": "Mobile number",
+                        "type": "string",
+                        "example": "0557888100"
                     }
                 },
                 "type": "object"
@@ -593,6 +708,63 @@
                         "description": "Amount",
                         "type": "string",
                         "example": "20"
+                    },
+                    "mobileNumber": {
+                        "title": "mobileNumber",
+                        "description": "Mobile number",
+                        "type": "string",
+                        "example": "0557888100"
+                    }
+                },
+                "type": "object"
+            },
+            "VerifyCustomerRequest": {
+                "title": "Verify Customer Request",
+                "description": "Verify customer request",
+                "required": [
+                    "username",
+                    "firstName",
+                    "lastName",
+                    "gender",
+                    "dob",
+                    "mobileNumber"
+                ],
+                "properties": {
+                    "username": {
+                        "title": "username",
+                        "description": "Username",
+                        "type": "string",
+                        "example": "henok"
+                    },
+                    "firstName": {
+                        "title": "firstName",
+                        "description": "First name",
+                        "type": "string",
+                        "example": "Henok"
+                    },
+                    "lastName": {
+                        "title": "lastName",
+                        "description": "Last name",
+                        "type": "string",
+                        "example": "Abebe"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "Email",
+                        "type": "string",
+                        "example": ""
+                    },
+                    "gender": {
+                        "title": "gender",
+                        "description": "Gender",
+                        "type": "string",
+                        "example": "M"
+                    },
+                    "dob": {
+                        "title": "dob",
+                        "description": "Date of birth",
+                        "type": "string",
+                        "example": "1990-01-01"
                     },
                     "mobileNumber": {
                         "title": "mobileNumber",

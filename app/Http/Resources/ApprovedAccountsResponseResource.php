@@ -4,14 +4,15 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
+
 use App\Http\Resources\AccountResource;
 
-class VerifyCustomerResponseResource extends JsonResource
+class ApprovedAccountsResponseResource extends JsonResource
 {
-    public function __construct($resource = "", $statusCode = 200, $statusDesc = 'Success', $client = "")
+    public function __construct($resource, $statusCode = 200, $statusDesc = 'Success', $client = "")
     {
-        // parent::__construct($resource);
-        $this->resource = $resource;
+        parent::__construct($resource);
         $this->statusCode = $statusCode;
         $this->statusDesc = $statusDesc;
         $this->client = $client;
@@ -26,7 +27,9 @@ class VerifyCustomerResponseResource extends JsonResource
         return [
             'StatusCode' => $this->statusCode,
             'StatusDesc' => $this->statusDesc,
-            'Result' => $this->resource,
+            'Result' => $this->resource ? collect($this->resource)->map(function ($item) {
+                return new ApprovedAccountResource($item);
+            }) : null,
             'Client' => $this->client,
         ];
     }
