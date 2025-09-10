@@ -93,7 +93,7 @@ class CoopsController extends Controller
         try{
             if($resp != null){
                 if(is_array($resp) && !empty($resp)){
-                    if(isset($resp[0]->Status) && $resp[0]->Status == 0){
+                    if(isset($resp[0]->Status) && $resp[0]->Status == 1){
                         Log::debug("Customer verification in progress");
                         Log::debug($resp);
                         Log::debug("Customer verified successfully");
