@@ -257,15 +257,22 @@ class AccountsApiController extends Controller
         $amount = $request->amount;
         $reference = $request->reference;
 
+        $channel = "USSD";
+
+        if ($request->has('channel')) {
+            $channel = $request->channel;
+        }
+
         Log::debug("Credit account Request received");
         Log::debug($request);
         Log::debug($accountNumber);
         Log::debug($amount);
         Log::debug($reference);
+        Log::debug($channel);
 
         $client = config('customConfig.clientName');
 
-        Log::debug("Calling procedure to credit account:::");
+        Log::debug("Calling procedure to credit account for client ".$client.":::");
 
         $respCode = 500;
         $respMessage = "Failed to get accounts";
@@ -276,9 +283,9 @@ class AccountsApiController extends Controller
         } else {
             // Calling procedure to credit account number
             Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
-            $resp = DB::select('exec addCustUSSDCredit ?, ?, ?',array($accountNumber, $amount, $reference));
+            $resp = DB::select('exec addCustUSSDCredit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
-            Log::debug("Response from procedure to credit account");
+            Log::debug("Response from procedure to credit account for client ".$client.":::");
             Log::debug($resp);
             // Log::debug(var_dump($resp[0]));
             // Log::debug($resp[0]->Status);
@@ -293,6 +300,222 @@ class AccountsApiController extends Controller
                             $resp = "SUCCESS";
                         } else {
                             Log::debug("Credit account request failed");
+                            $respCode = 301;
+                            $respMessage = "Failed";
+                            $resp = "FAILED";
+                        }
+                    } else {
+                        $respCode = 207;
+                        $respMessage = "Unable to credit account";
+                        $resp = null;
+                    }
+                } else {
+                    $respCode = 209;
+                    $respMessage = "Null response received. Unknown payment status.";
+                    $resp = null;
+                }
+            } catch(Exception $e){
+                $respCode = 501;
+                $respMessage = "An error occured while attempting to credit account";
+                $resp = null;
+            }
+        }
+        
+
+        Log::debug("Sending credit account response back to gateway");
+        Log::debug($resp);
+
+        return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
+    }
+
+    /**
+     * Debit account.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/debit-account",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to debit account",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/DebitAccountRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function debitAccount(Request $request)
+    {
+        //
+        $accountNumber = $request->accountNumber;
+        $amount = $request->amount;
+        $reference = $request->reference;
+
+        $channel = "USSD";
+
+        if ($request->has('channel')) {
+            $channel = $request->channel;
+        }
+
+        Log::debug("Debit account Request received");
+        Log::debug($request);
+        Log::debug($accountNumber);
+        Log::debug($amount);
+        Log::debug($reference);
+        Log::debug($channel);
+
+        $client = config('customConfig.clientName');
+
+        Log::debug("Calling procedure to debit account for client ".$client.":::");
+
+        $respCode = 500;
+        $respMessage = "Failed to get accounts";
+        $resp = null;
+
+        if(trim($amount)==""){
+            $respMessage = "No amount entered";
+        } else {
+            // Calling procedure to debit account number
+            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
+            $resp = DB::select('exec addCustUSSDDebit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
+
+            Log::debug("Response from procedure to debit account for client ".$client.":::");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+            try{
+                if($resp != null){
+                    if(is_array($resp) && !empty($resp)){
+                        if($resp[0]->Status==1){
+                            Log::debug("Debit account request was successful");
+                            $respCode = 200;
+                            $respMessage = "Success";
+                            $resp = "SUCCESS";
+                        } else {
+                            Log::debug("Debit account request failed");
+                            $respCode = 301;
+                            $respMessage = "Failed";
+                            $resp = "FAILED";
+                        }
+                    } else {
+                        $respCode = 207;
+                        $respMessage = "Unable to credit account";
+                        $resp = null;
+                    }
+                } else {
+                    $respCode = 209;
+                    $respMessage = "Null response received. Unknown payment status.";
+                    $resp = null;
+                }
+            } catch(Exception $e){
+                $respCode = 501;
+                $respMessage = "An error occured while attempting to credit account";
+                $resp = null;
+            }
+        }
+        
+
+        Log::debug("Sending credit account response back to gateway");
+        Log::debug($resp);
+
+        return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
+    }
+
+    /**
+     * Credit account.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/credit-shares-account",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to credit shares account",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreditAccountRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function sharesCreditAccount(Request $request)
+    {
+        //
+        $accountNumber = $request->accountNumber;
+        $amount = $request->amount;
+        $reference = $request->reference;
+
+        $channel = "USSD";
+
+        if ($request->has('channel')) {
+            $channel = $request->channel;
+        }
+
+        Log::debug("Credit shares account Request received");
+        Log::debug($request);
+        Log::debug($accountNumber);
+        Log::debug($amount);
+        Log::debug($reference);
+        Log::debug($channel);
+
+        $client = config('customConfig.clientName');
+
+        Log::debug("Calling procedure to credit shares account for client ".$client.":::");
+
+        $respCode = 500;
+        $respMessage = "Failed to get accounts";
+        $resp = null;
+
+        if(trim($amount)==""){
+            $respMessage = "No amount entered";
+        } else {
+            // Calling procedure to credit account number
+            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
+            $resp = DB::select('exec addCustUSSDSharesCredit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
+
+            Log::debug("Response from procedure to credit shares account for client ".$client.":::");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+            try{
+                if($resp != null){
+                    if(is_array($resp) && !empty($resp)){
+                        if($resp[0]->Status==1){
+                            Log::debug("Credit shares account request was successful");
+                            $respCode = 200;
+                            $respMessage = "Success";
+                            $resp = "SUCCESS";
+                        } else {
+                            Log::debug("Credit shares account request failed");
                             $respCode = 301;
                             $respMessage = "Failed";
                             $resp = "FAILED";

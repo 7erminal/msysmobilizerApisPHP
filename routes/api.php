@@ -18,6 +18,8 @@ Route::prefix(config('customConfig.clientId'))->group(function () {
     Route::post('/list-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3']);
     Route::post('/list-cust-accounts', [App\Http\Controllers\AccountsApiController::class, 'listAccountsFirst3Cust']);
     Route::post('/credit-account', [App\Http\Controllers\AccountsApiController::class, 'creditAccount']);
+    Route::post('/credit-shares-account', [App\Http\Controllers\AccountsApiController::class, 'sharesCreditAccount']);
+    Route::post('/debit-account', [App\Http\Controllers\AccountsApiController::class, 'debitAccount']);
     Route::post('/account-balance', [App\Http\Controllers\AccountsApiController::class, 'checkAccountBalance']);
     Route::post('/get-contact-info', [App\Http\Controllers\AccountsApiController::class, 'getContactInfo']);
     Route::post('/field-deposit', [App\Http\Controllers\AccountsApiController::class, 'saveFieldDeposit']);

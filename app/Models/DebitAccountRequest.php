@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @OA\Schema(
- *      title="Credit account Request",
- *      description="Credit account",
+ *      title="Debit account Request",
+ *      description="Debit account",
  *      type="object",
  *      required={"accountNumber","amount"}
  * )
  */
-class CreditAccountRequest extends Model
+class DebitAccountRequest extends Model
 {
     use HasFactory;
 

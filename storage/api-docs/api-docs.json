@@ -112,6 +112,72 @@
                 }
             }
         },
+        "/api/debit-account": {
+            "post": {
+                "operationId": "47f81c8af59f29733a4984acb6d8d014",
+                "requestBody": {
+                    "description": "request parameters to debit account",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DebitAccountRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/credit-shares-account": {
+            "post": {
+                "operationId": "3d8602c6db6405fdb925dd7f44446d08",
+                "requestBody": {
+                    "description": "request parameters to credit shares account",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreditAccountRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/account-balance": {
             "post": {
                 "operationId": "5bfe57c2004b1f0fb9ffe1a96919ac02",
@@ -594,6 +660,53 @@
                         "description": "Amount",
                         "type": "string",
                         "example": "20"
+                    },
+                    "reference": {
+                        "title": "reference",
+                        "description": "Reference",
+                        "type": "string",
+                        "example": "Fees"
+                    },
+                    "channel": {
+                        "title": "channel",
+                        "description": "Channel",
+                        "type": "string",
+                        "example": "USSD"
+                    }
+                },
+                "type": "object"
+            },
+            "DebitAccountRequest": {
+                "title": "Debit account Request",
+                "description": "Debit account",
+                "required": [
+                    "accountNumber",
+                    "amount"
+                ],
+                "properties": {
+                    "accountNumber": {
+                        "title": "accountNumber",
+                        "description": "Account number",
+                        "type": "string",
+                        "example": "10000001001"
+                    },
+                    "amount": {
+                        "title": "amount",
+                        "description": "Amount",
+                        "type": "string",
+                        "example": "20"
+                    },
+                    "reference": {
+                        "title": "reference",
+                        "description": "Reference",
+                        "type": "string",
+                        "example": "Fees"
+                    },
+                    "channel": {
+                        "title": "channel",
+                        "description": "Channel",
+                        "type": "string",
+                        "example": "USSD"
                     }
                 },
                 "type": "object"
