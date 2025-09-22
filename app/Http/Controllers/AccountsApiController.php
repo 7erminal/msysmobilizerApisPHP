@@ -283,7 +283,7 @@ class AccountsApiController extends Controller
         } else {
             // Calling procedure to credit account number
             Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
-            $resp = DB::select('exec addCustUSSDCredit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
+            $resp = DB::select('exec addCustUSSDCredit ?, ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
             Log::debug("Response from procedure to credit account for client ".$client.":::");
             Log::debug($resp);
@@ -391,7 +391,7 @@ class AccountsApiController extends Controller
         } else {
             // Calling procedure to debit account number
             Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
-            $resp = DB::select('exec addCustUSSDDebit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
+            $resp = DB::select('exec addCustUSSDDebit ?, ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
             Log::debug("Response from procedure to debit account for client ".$client.":::");
             Log::debug($resp);
@@ -499,7 +499,7 @@ class AccountsApiController extends Controller
         } else {
             // Calling procedure to credit account number
             Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
-            $resp = DB::select('exec addCustUSSDSharesCredit ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
+            $resp = DB::select('exec addCustUSSDSharesCredit ?, ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
             Log::debug("Response from procedure to credit shares account for client ".$client.":::");
             Log::debug($resp);
