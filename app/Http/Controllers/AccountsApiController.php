@@ -10,6 +10,7 @@ use App\Http\Resources\ValidationResponseResource;
 use App\Http\Resources\AccountBalResponseResource;
 use App\Http\Resources\CustAccountsResponseResource;
 use App\Http\Resources\ContactInfoResponseResource;
+use App\Http\Resources\AccountStatementResponseResource;
 use App\Http\Functions\Functions;
 use Illuminate\Support\Facades\Config;
 
@@ -801,5 +802,86 @@ class AccountsApiController extends Controller
         }
 
         return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/get-account-statement/{accountNumber}",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to list accounts",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/IdRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function accountStatement(string $accountNumber)
+    {
+        //
+        // $accountNumber = $request->accountNumber;
+
+        Log::debug("Request received to get account statement");
+        Log::debug($accountNumber);
+
+        Log::debug("Calling procedure");
+
+        $client = config('customConfig.clientName');
+
+        // Calling procedure to get accounts
+        $resp = DB::select('exec kafStartField ?',array($accountNumber));
+
+        Log::debug("Response from procedure to get account statement");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp));
+        // Log::debug($resp[0]->AccountNumber);
+
+        $respCode = 500;
+        $respMessage = "Failed to get account statement";
+
+        try{
+            if($resp != null){
+                if(is_array($resp) && !empty($resp)){
+                    $respCode = 200;
+                    $respMessage = "Data retrieved successfully";
+                } else {
+                    Log::debug("No accounts found");
+                    $respCode = 207;
+                    $respMessage = "No accounts found";
+                    $resp = null;
+                }
+            } else {
+                Log::debug("Null response. No accounts found");
+                $respCode = 206;
+                $respMessage = "No accounts found";
+                $resp = null;
+            }
+        } catch(Exception $e){
+            Log::debug("An error occurred. No accounts found");
+            $respCode = 501;
+            $respMessage = "Failed to get accounts";
+            $resp = null;
+        }
+        
+
+        return new AccountStatementResponseResource($resp, $respCode, $respMessage, $client);
     }
 }
