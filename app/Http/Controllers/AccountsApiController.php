@@ -847,7 +847,7 @@ class AccountsApiController extends Controller
         $client = config('customConfig.clientName');
 
         // Calling procedure to get accounts
-        $resp = DB::select('exec kafStartField ?',array($accountNumber));
+        $resp = DB::select('exec kafCOOPSMiniStatement ?',array($accountNumber));
 
         Log::debug("Response from procedure to get account statement");
         Log::debug($resp);
