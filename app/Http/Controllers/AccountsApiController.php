@@ -809,7 +809,7 @@ class AccountsApiController extends Controller
      */
     /**
      * @OA\Post(
-     *     path="/api/get-account-statement/{accountNumber}",
+     *     path="/api/account-statement/{accountNumber}",
      *     @OA\Response(response="200", description="Success"),
      *     @OA\RequestBody(
      *         description="request parameters to list accounts",
