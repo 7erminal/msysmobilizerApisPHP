@@ -839,7 +839,7 @@ class AccountsApiController extends Controller
         //
         // $accountNumber = $request->accountNumber;
 
-        Log::debug("Request received to get account statement");
+        Log::debug("Request received to get account statement ::");
         Log::debug($accountNumber);
 
         Log::debug("Calling procedure");
