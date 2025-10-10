@@ -15,9 +15,10 @@ class AccountStatementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return $this->resource ? [
-            'Product' => $this->Product,
-            'AccountNumber' => $this->AccountNumber,
-            'AccountName' => $this->AccountName
+            'TransactionDate' => $this->TransDate,
+            'TransactionDescription' => $this->TransDesc,
+            'Debit' => $this->Debit,
+            'Credit' => $this->Credit
         ] : null;
     }
 }
