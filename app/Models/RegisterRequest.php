@@ -60,4 +60,15 @@ class RegisterRequest extends Model
      * @var string
      */
     public $mobileNumber;
+
+    /**
+     * @OA\Property(
+     *      title="source",
+     *      description="Source of the registration",
+     *      example="WEB"
+     * )
+     *
+     * @var string
+     */
+    public $source;
 }

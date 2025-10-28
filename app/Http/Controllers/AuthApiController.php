@@ -362,6 +362,7 @@ class AuthApiController extends Controller
         $lastName = $request->lastName;
         $gender = $request->gender;
         $mobileNumber = $request->mobileNumber;
+        $source = $request->source;
         $type = "CUSTOMER";
 
         $proceed = true;
@@ -394,7 +395,7 @@ class AuthApiController extends Controller
             Log::debug("Calling procedure");
 
             try{
-                $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber));
+                $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber, $source));
 
                 Log::debug($resp);
                 Log::debug(json_decode(json_encode($resp[0]), true));
