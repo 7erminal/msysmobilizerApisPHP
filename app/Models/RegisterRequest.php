@@ -63,6 +63,17 @@ class RegisterRequest extends Model
 
     /**
      * @OA\Property(
+     *      title="chargeAmount",
+     *      description="Amount charged",
+     *      example="1.0"
+     * )
+     *
+     * @var string
+     */
+    public $chargeAmount;
+
+    /**
+     * @OA\Property(
      *      title="source",
      *      description="Source of the registration",
      *      example="WEB"

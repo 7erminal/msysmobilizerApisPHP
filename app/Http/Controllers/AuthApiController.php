@@ -362,6 +362,7 @@ class AuthApiController extends Controller
         $lastName = $request->lastName;
         $gender = $request->gender;
         $mobileNumber = $request->mobileNumber;
+        $chargeAmount = $request->chargeAmount;
         $source = $request->source;
         $type = "CUSTOMER";
 
