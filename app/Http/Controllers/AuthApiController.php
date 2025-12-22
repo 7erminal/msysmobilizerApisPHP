@@ -406,7 +406,7 @@ class AuthApiController extends Controller
             Log::debug("Calling procedure");
 
             try{
-                $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber, $source, $chargeAmount, $txnRef));
+                $resp = DB::select('exec kafNewAccountCust ?, ?, ?, ?, ?, ?, ?',array($firstName, $lastName, $gender, $mobileNumber, $source, $chargeAmount, $txnRef));
 
                 Log::debug($resp);
                 Log::debug(json_decode(json_encode($resp[0]), true));
