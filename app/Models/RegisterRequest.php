@@ -82,4 +82,15 @@ class RegisterRequest extends Model
      * @var string
      */
     public $source;
+
+    /**
+     * @OA\Property(
+     *      title="txnRef",
+     *      description="transaction Reference",
+     *      example="TXN-220392"
+     * )
+     *
+     * @var string
+     */
+    public $txnRef;
 }
