@@ -372,9 +372,18 @@ class AuthApiController extends Controller
         $client = config('customConfig.clientName');
 
         Log::debug("Request received");
+        Log::debug("First Name:");
         Log::debug($firstName);
+        Log::debug("Gender:");
         Log::debug($gender);
+        Log::debug("Mobile Number:");
         Log::debug($mobileNumber);
+        Log::debug("Source:");
+        Log::debug($source);
+        Log::debug("Charge Amount:");
+        Log::debug($chargeAmount);
+        Log::debug("Transaction Reference:");
+        Log::debug($txnRef);
 
         if($gender=='f' || $gender=='F'){
             $gender = "FEMALE";
