@@ -283,7 +283,7 @@ class AccountsApiController extends Controller
             $respMessage = "No amount entered";
         } else {
             // Calling procedure to credit account number
-            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
+            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount." and channel ".$channel);
             $resp = DB::select('exec addCustUSSDCredit ?, ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
             Log::debug("Response from procedure to credit account for client ".$client.":::");
@@ -391,7 +391,7 @@ class AccountsApiController extends Controller
             $respMessage = "No amount entered";
         } else {
             // Calling procedure to debit account number
-            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount);
+            Log::debug("Sending request with reference: ".$reference." account number ".$accountNumber." and amount ".$amount." and channel ".$channel);
             $resp = DB::select('exec addCustUSSDDebit ?, ?, ?, ?',array($accountNumber, $amount, $reference, $channel));
 
             Log::debug("Response from procedure to debit account for client ".$client.":::");
