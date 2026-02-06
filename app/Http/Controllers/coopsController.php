@@ -126,6 +126,7 @@ class CoopsController extends Controller
             $resp = null;
         }
         
+        Log::debug("Sending response");
 
         return new VerifyCustomerResponseResource($resp, $respCode, $respMessage, $client);
     }
