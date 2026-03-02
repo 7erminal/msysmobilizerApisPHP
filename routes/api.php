@@ -30,6 +30,9 @@ Route::prefix(config('customConfig.clientId'))->group(function () {
     Route::get('/fetch-approved-accounts', [App\Http\Controllers\CoopsController::class, 'fetchApprovedAccounts']);
     Route::post('/activate-verified-customer', [App\Http\Controllers\CoopsController::class, 'activateVerifiedCustomer']); 
     Route::get('/account-statement/{accountNumber}', [App\Http\Controllers\AccountsApiController::class, 'accountStatement']);
+    Route::get('/list-account-loans/{accountNumber}', [App\Http\Controllers\AccountsApiController::class, 'listAccountLoans']);
+    Route::get('/loan-repayment', [App\Http\Controllers\AccountsApiController::class, 'loanRepayment']);
+    Route::get('/account-statement/{accountNumber}', [App\Http\Controllers\AccountsApiController::class, 'accountStatement']);
 });
 // curl -ivk http://127.0.0.1:8001/api/verify-pin
 // --header 'Content-Type: application/json' \
