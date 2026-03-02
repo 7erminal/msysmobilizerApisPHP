@@ -11,6 +11,7 @@ use App\Http\Resources\AccountBalResponseResource;
 use App\Http\Resources\CustAccountsResponseResource;
 use App\Http\Resources\ContactInfoResponseResource;
 use App\Http\Resources\AccountStatementResponseResource;
+use App\Http\Resources\LoanListResponseResource;
 use App\Http\Functions\Functions;
 use Illuminate\Support\Facades\Config;
 
@@ -884,4 +885,274 @@ class AccountsApiController extends Controller
 
         return new AccountStatementResponseResource($resp, $respCode, $respMessage, $client);
     }
+
+    /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/close-account/{accountNumber}",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to list accounts",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/IdRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function closeAccount(string $accountNumber)
+    {
+        //
+        // $accountNumber = $request->accountNumber;
+
+        Log::debug("Request received to get account statement ::");
+        Log::debug($accountNumber);
+
+        Log::debug("Calling procedure");
+
+        $client = config('customConfig.clientName');
+
+        // Calling procedure to get accounts
+        $resp = DB::select('exec kafCOOPSMiniStatement ?',array($accountNumber));
+
+        Log::debug("Response from procedure to get account statement");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp));
+        // Log::debug($resp[0]->AccountNumber);
+
+        $respCode = 500;
+        $respMessage = "Failed to get account statement";
+
+        try{
+            if($resp != null){
+                if(is_array($resp) && !empty($resp)){
+                    $respCode = 200;
+                    $respMessage = "Data retrieved successfully";
+                } else {
+                    Log::debug("No accounts found");
+                    $respCode = 207;
+                    $respMessage = "No accounts found";
+                    $resp = null;
+                }
+            } else {
+                Log::debug("Null response. No accounts found");
+                $respCode = 206;
+                $respMessage = "No accounts found";
+                $resp = null;
+            }
+        } catch(Exception $e){
+            Log::debug("An error occurred. No accounts found");
+            $respCode = 501;
+            $respMessage = "Failed to get accounts";
+            $resp = null;
+        }
+        
+
+        return new AccountStatementResponseResource($resp, $respCode, $respMessage, $client);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/list-account-loans/{accountNumber}",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to list accounts",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/IdRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function listAccountLoans(string $accountNumber)
+    {
+        //
+        // $accountNumber = $request->accountNumber;
+
+        Log::debug("Request received to get account statement ::");
+        Log::debug($accountNumber);
+
+        Log::debug("Calling loan procedure");
+
+        $client = config('customConfig.clientName');
+
+        // Calling procedure to get accounts
+        $resp = DB::select('exec kafLoanBalDetails ?',array($accountNumber));
+
+        Log::debug("Response from procedure to get loan list");
+        Log::debug($resp);
+        // Log::debug(var_dump($resp));
+        // Log::debug($resp[0]->AccountNumber);
+
+        $respCode = 500;
+        $respMessage = "Failed to get loan list";
+
+        try{
+            if($resp != null){
+                if(is_array($resp) && !empty($resp)){
+                    $respCode = 200;
+                    $respMessage = "Loan Data retrieved successfully";
+                } else {
+                    Log::debug("No loans found for this account");
+                    $respCode = 207;
+                    $respMessage = "No loans found for this account";
+                    $resp = null;
+                }
+            } else {
+                Log::debug("Null response. No loans found for this account");
+                $respCode = 206;
+                $respMessage = "No loans found for this account";
+                $resp = null;
+            }
+        } catch(Exception $e){
+            Log::debug("An error occurred. No loans found for this account");
+            $respCode = 501;
+            $respMessage = "Failed to get loan list for this account";
+            $resp = null;
+        }
+        
+
+        return new LoanListResponseResource($resp, $respCode, $respMessage, $client);
+    }
+
+    /**
+     * Save field deposit.
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/loan-repayment",
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\RequestBody(
+     *         description="request parameters to list accounts",
+     *         required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/SaveFieldRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="Successful operation"
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
+     */
+    public function loanRepayment(Request $request)
+    {
+        //
+        $accountNumber = $request->accountNumber;
+        $amount = $request->amount;
+        $loanId = $request->loanId;
+        $mobileNumber = $request->mobileNumber;
+
+        $client = config('customConfig.clientName');
+
+        Log::debug("Request received for loan repayment");
+        Log::debug($accountNumber);
+        Log::debug($amount);
+        Log::debug($loanId);
+
+        Log::debug("Calling procedure for field deposit");
+
+        $newNum = $this->functions->validateNumber($mobileNumber);
+
+        Log::debug($newNum);
+
+        $respCode = 500;
+        $respMessage = "Failed to get account";
+        $resp = null;
+
+        if(trim($amount)==""){
+            Log::error("No amount entered");
+            $respMessage = "No amount entered";
+        } else {
+            Log::debug("Request sent:::");
+            Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
+            // Calling procedure to credit account number
+            $resp = DB::select('exec addMobPOSTrans ?, ?, ?',array($accountNumber, $loanId, $amount, $newNum));
+
+            Log::debug("Response from repay loan procedure:::");
+            Log::debug($resp);
+            // Log::debug(var_dump($resp[0]));
+            // Log::debug($resp[0]->Status);
+
+            try{
+                if($resp != null){
+                    if(is_array($resp) && !empty($resp)){
+                        if($resp[0]->Status==1){
+                            Log::error("Field deposit successful:::");
+                            $respCode = 200;
+                            $respMessage = "Deposit successful";
+                            $resp = "SUCCESS";
+                        } else {
+                            Log::error("Field deposit failed:::");
+                            $respCode = 206;
+                            $respMessage = "Deposit failed. Please check details and try again.";
+                            $resp = "FAILED";
+                        }
+                        
+                    } else {
+                        Log::error("Field deposit failed:::empty response");
+                        $respCode = 207;
+                        $respMessage = "Failed to deposit";
+                        $resp = null;
+                    }
+                } else {
+                    Log::error("Field deposit failed:::Null response");
+                    $respCode = 209;
+                    $respMessage = "Null response received. Unknown status.";
+                    $resp = null;
+                }
+            } catch(Exception $e){
+                Log::error("An error occurred. Field deposit failed:::");
+                $respCode = 501;
+                $respMessage = "An error occured while checking balance";
+                $resp = null;
+            }
+        }
+
+        return new ValidationResponseResource($resp, $respCode, $respMessage, $client);
+    }
 }
+
