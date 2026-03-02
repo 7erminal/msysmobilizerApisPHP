@@ -1110,7 +1110,7 @@ class AccountsApiController extends Controller
             Log::debug("Request sent:::");
             Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
             // Calling procedure to credit account number
-            $resp = DB::select('exec addMobPOSTrans ?, ?, ?',array($accountNumber, $loanId, $amount, $newNum));
+            $resp = DB::select('exec addMobPOSTrans ?, ?, ?, ?',array($accountNumber, $loanId, $amount, $newNum));
 
             Log::debug("Response from repay loan procedure:::");
             Log::debug($resp);
@@ -1123,29 +1123,29 @@ class AccountsApiController extends Controller
                         if($resp[0]->Status==1){
                             Log::error("Field deposit successful:::");
                             $respCode = 200;
-                            $respMessage = "Deposit successful";
+                            $respMessage = "Loan repayment successful";
                             $resp = "SUCCESS";
                         } else {
                             Log::error("Field deposit failed:::");
                             $respCode = 206;
-                            $respMessage = "Deposit failed. Please check details and try again.";
+                            $respMessage = "Loan repayment failed. Please check details and try again.";
                             $resp = "FAILED";
                         }
                         
                     } else {
-                        Log::error("Field deposit failed:::empty response");
+                        Log::error("Loan repayment failed:::empty response");
                         $respCode = 207;
-                        $respMessage = "Failed to deposit";
+                        $respMessage = "Failed to repay loan";
                         $resp = null;
                     }
                 } else {
-                    Log::error("Field deposit failed:::Null response");
+                    Log::error("Loan repayment failed:::Null response");
                     $respCode = 209;
                     $respMessage = "Null response received. Unknown status.";
                     $resp = null;
                 }
             } catch(Exception $e){
-                Log::error("An error occurred. Field deposit failed:::");
+                Log::error("An error occurred. Loan repayment failed:::");
                 $respCode = 501;
                 $respMessage = "An error occured while checking balance";
                 $resp = null;
