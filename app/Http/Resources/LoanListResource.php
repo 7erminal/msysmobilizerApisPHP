@@ -15,9 +15,9 @@ class LoanListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return $this->resource ? [
-            'LoanDate' => $this->LoanDate,
-            'LoanDescription' => $this->LoanDesc,
-            'LoanAmount' => $this->LoanAmount,
+            'LoanID' => $this->LoanID,
+            'LoanType' => $this->LoanType,
+            'LoanBal' => $this->LoanBal,
         ] : null;
     }
 }
