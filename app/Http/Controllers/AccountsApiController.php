@@ -736,6 +736,18 @@ class AccountsApiController extends Controller
 
         $client = config('customConfig.clientName');
 
+        $channel = "USSD";
+
+        if ($request->has('channel')) {
+            $channel = $request->channel;
+        }
+
+        $paymentMethod = "CASH";
+
+        if ($request->has('paymentMethod')) {
+            $paymentMethod = $request->paymentMethod;
+        }
+
         Log::debug("Request received for field deposit");
         Log::debug($accountNumber);
         Log::debug($amount);
@@ -760,7 +772,7 @@ class AccountsApiController extends Controller
             Log::debug("Request sent:::");
             Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
             // Calling procedure to credit account number
-            $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
+            $resp = DB::select('exec addMobUSSDTrans ?, ?, ?, ?',array($accountNumber, $amount, $newNum, $paymentMethod));
 
             Log::debug("Response from add field deposit procedure:::");
             Log::debug($resp);
