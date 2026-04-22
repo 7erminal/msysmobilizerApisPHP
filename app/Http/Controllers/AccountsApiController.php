@@ -1097,6 +1097,11 @@ class AccountsApiController extends Controller
         $amount = $request->amount;
         $loanId = $request->loanId;
         $mobileNumber = $request->mobileNumber;
+        $paymentMethod = "CASH";
+
+        if($request->has('paymentMethod')){
+            $paymentMethod = $request->paymentMethod;
+        }
 
         $client = config('customConfig.clientName');
 
@@ -1104,6 +1109,8 @@ class AccountsApiController extends Controller
         Log::debug($accountNumber);
         Log::debug($amount);
         Log::debug($loanId);
+        Log::debug($mobileNumber);
+        Log::debug($paymentMethod);
 
         Log::debug("Calling procedure for field deposit");
 
@@ -1122,7 +1129,7 @@ class AccountsApiController extends Controller
             Log::debug("Request sent:::");
             Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
             // Calling procedure to credit account number
-            $resp = DB::select('exec addMobPOSTrans ?, ?, ?, ?',array($accountNumber, $loanId, $amount, $newNum));
+            $resp = DB::select('exec addMobPOSTrans ?, ?, ?, ?, ?',array($accountNumber, $loanId, $amount, $newNum, $paymentMethod));
 
             Log::debug("Response from repay loan procedure:::");
             Log::debug($resp);
