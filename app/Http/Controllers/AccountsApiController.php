@@ -1112,7 +1112,7 @@ class AccountsApiController extends Controller
         Log::debug($mobileNumber);
         Log::debug($paymentMethod);
 
-        Log::debug("Calling procedure for field deposit");
+        Log::debug("Calling procedure for loan repayment");
 
         $newNum = $this->functions->validateNumber($mobileNumber);
 
