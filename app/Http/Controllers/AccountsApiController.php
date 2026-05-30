@@ -772,7 +772,8 @@ class AccountsApiController extends Controller
             Log::debug("Request sent:::");
             Log::debug("Account number:: ".$accountNumber."\nAmount:: ".$amount."\nNumber:: ".$newNum);
             // Calling procedure to credit account number
-            $resp = DB::select('exec addMobUSSDTrans ?, ?, ?, ?',array($accountNumber, $amount, $newNum, $paymentMethod));
+            // $resp = DB::select('exec addMobUSSDTrans ?, ?, ?, ?',array($accountNumber, $amount, $newNum, $paymentMethod));
+            $resp = DB::select('exec addMobUSSDTrans ?, ?, ?',array($accountNumber, $amount, $newNum));
 
             Log::debug("Response from add field deposit procedure:::");
             Log::debug($resp);
