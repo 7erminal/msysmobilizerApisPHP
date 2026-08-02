@@ -94,7 +94,7 @@ class AccountsApiController extends Controller
      */
     public function listAccountsFirst3(Request $request)
     {
-        Log:debug("Request received to list first 3 accounts");
+        Log::debug("Request received to list first 3 accounts");
         //
         $id = $request->id;
 
